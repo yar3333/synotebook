@@ -214,19 +214,46 @@ namespace SyNotebook.Crypting
 			IdeaBase.makeEncryptKey(encKey,key);
 		}
 
-        public IdeaCFB(string password)
+        IdeaCFB(string password)
         {
             encIV = (byte[])DefaultCryptIV.Clone();
             decIV = (byte[])DefaultCryptIV.Clone();
 
             IdeaBase.makeEncryptKey(encKey, ConvertPassword(password));
         }
-        
+
+
+        public static string Encrypt(string s, string password)
+        {
+            var idea = new IdeaCFB(password);
+			return idea.Encrypt(s);
+        }
+
+        public static string Decrypt(string s, string password)
+        {
+            var idea = new IdeaCFB(password);
+            return idea.Decrypt(s);
+        }
+
+        string Encrypt(string s)
+        {
+            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
+            Encrypt(buf);
+            return System.Text.Encoding.Default.GetString(buf);
+        }
+
+        string Decrypt(string s)
+        {
+            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
+            Decrypt(buf);
+            return System.Text.Encoding.Default.GetString(buf);
+        }
+
         /// <summary>
-		/// Шифрует байт данных.
-		/// </summary>
-		/// <param name="p">исходный байт данных</param>
-		byte Encrypt(byte p)
+        /// Шифрует байт данных.
+        /// </summary>
+        /// <param name="p">исходный байт данных</param>
+        byte Encrypt(byte p)
 		{
 			UInt16[] iv16 = new UInt16[4];
 			iv16[0] = (UInt16)((encIV[1]<<8) | encIV[0]);
@@ -275,20 +302,6 @@ namespace SyNotebook.Crypting
 		{
 			for (int i=0;i<buf.Length;i++) buf[i] = Decrypt(buf[i]);
 		}
-
-        public string Encrypt(string s)
-        {
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
-            Encrypt(buf);
-            return System.Text.Encoding.Default.GetString(buf);
-        }
-
-        public string Decrypt(string s)
-        {
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
-            Decrypt(buf);
-            return System.Text.Encoding.Default.GetString(buf);
-        }
 
         /// <summary>
         /// Преобразует пароль из шестнадцатиричного числа в массив 8-ми элементов.

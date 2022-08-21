@@ -439,14 +439,12 @@ namespace SyNotebook
             {
                 if (password==null || password.Length==0) throw new BadPassword(this);
                 
-                var crypter = new Crypting.IdeaCFB(password);
-
                 string potenName = "";
-                if (!isTopLevelCryptedItem) potenName = crypter.Decrypt(name);
+                if (!isTopLevelCryptedItem) potenName = Crypting.IdeaCFB.Decrypt(name, password);
 
-                string potenText = crypter.Decrypt(text);
+                string potenText = Crypting.IdeaCFB.Decrypt(text, password);
 
-                UInt32 crc = GetTextCRC(potenName + potenText);
+                var crc = GetTextCRC(potenName + potenText);
                 if (crc != textCRC32) throw new BadPassword(this);
 
                 this.password = password;
@@ -480,10 +478,9 @@ namespace SyNotebook
             if (!isCrypted)
             {
                 textCRC32 = GetTextCRC((!isTopLevelCryptedItem ? name : "") + text);
-                var crypter = new Crypting.IdeaCFB(password);
-
-                if (!isTopLevelCryptedItem) name = crypter.Encrypt(name);
-                text = crypter.Encrypt(text);
+                
+                if (!isTopLevelCryptedItem) name = Crypting.IdeaCFB.Encrypt(name, password);
+                text = Crypting.IdeaCFB.Encrypt(text, password);
 
                 isCrypted = true;
                 isLocked = true;
