@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,12 +15,15 @@ namespace SyNotebook.Crypting
                 var passwordBytes = Encoding.UTF8.GetBytes(password);
 
                 AES.Key = SHA256Managed.Create().ComputeHash(passwordBytes);
-                AES.IV = MD5.Create().ComputeHash(passwordBytes);
+                //AES.IV = MD5.Create().ComputeHash(passwordBytes);
+                AES.GenerateIV();
                 AES.Mode = CipherMode.CBC;
                 AES.Padding = PaddingMode.PKCS7;
 
                 using (var mem = new MemoryStream())
                 {
+                    mem.Write(AES.IV, 0, AES.IV.Length);
+
                     var bytesToEncrypt = Encoding.UTF8.GetBytes(messageToEncrypt);
                         
                     var crypto = new CryptoStream(mem, AES.CreateEncryptor(), CryptoStreamMode.Write);
@@ -38,16 +42,17 @@ namespace SyNotebook.Crypting
                 var passwordBytes = Encoding.UTF8.GetBytes(password);
 
                 AES.Key = SHA256Managed.Create().ComputeHash(passwordBytes);
-                AES.IV = MD5.Create().ComputeHash(passwordBytes);
+                //AES.IV = MD5.Create().ComputeHash(passwordBytes);
                 AES.Mode = CipherMode.CBC;
                 AES.Padding = PaddingMode.PKCS7;
 
+                var bytesToDecrypt = Convert.FromBase64String(messageToDecrypt);
+                AES.IV = bytesToDecrypt.Take(AES.IV.Length).ToArray();
+
                 using (var mem = new MemoryStream())
                 {
-                    var bytesToDecrypt = Convert.FromBase64String(messageToDecrypt);
-
                     var crypto = new CryptoStream(mem, AES.CreateDecryptor(), CryptoStreamMode.Write);
-                    crypto.Write(bytesToDecrypt, 0, bytesToDecrypt.Length);
+                    crypto.Write(bytesToDecrypt, AES.IV.Length, bytesToDecrypt.Length - AES.IV.Length);
                     crypto.FlushFinalBlock();
 
                     return Encoding.UTF8.GetString(mem.ToArray());
