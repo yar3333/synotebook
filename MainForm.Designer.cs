@@ -30,7 +30,7 @@ namespace SyNotebook
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ToolTip toolTip;
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Заметки");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Заметки");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btSetTextFontMonospace = new System.Windows.Forms.Button();
             this.btSetTextFontProportional = new System.Windows.Forms.Button();
@@ -72,6 +72,7 @@ namespace SyNotebook
             toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.treeMenu.SuspendLayout();
             this.textMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -243,33 +244,33 @@ namespace SyNotebook
             // tree
             // 
             this.tree.AllowDrop = true;
-            this.tree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tree.ContextMenuStrip = this.treeMenu;
             this.tree.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tree.HideSelection = false;
             this.tree.LabelEdit = true;
             this.tree.Location = new System.Drawing.Point(0, 41);
             this.tree.Name = "tree";
-            treeNode2.Name = "Root";
-            treeNode2.Text = "Заметки";
-            treeNode2.ToolTipText = "Корневой раздел";
+            treeNode1.Name = "Root";
+            treeNode1.Text = "Заметки";
+            treeNode1.ToolTipText = "Корневой раздел";
             this.tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.tree.ShowNodeToolTips = true;
             this.tree.ShowRootLines = false;
             this.tree.Size = new System.Drawing.Size(193, 314);
             this.tree.TabIndex = 0;
-            this.tree.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tree_MouseDoubleClick);
+            this.tree.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tree_BeforeLabelEdit);
             this.tree.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tree_AfterLabelEdit);
             this.tree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tree_BeforeExpand);
-            this.tree.DragDrop += new System.Windows.Forms.DragEventHandler(this.tree_DragDrop);
-            this.tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
-            this.tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tree_MouseDown);
-            this.tree.DragEnter += new System.Windows.Forms.DragEventHandler(this.tree_DragEnter);
-            this.tree.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tree_BeforeLabelEdit);
             this.tree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tree_ItemDrag);
+            this.tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
+            this.tree.DragDrop += new System.Windows.Forms.DragEventHandler(this.tree_DragDrop);
+            this.tree.DragEnter += new System.Windows.Forms.DragEventHandler(this.tree_DragEnter);
+            this.tree.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tree_MouseDoubleClick);
+            this.tree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tree_MouseDown);
             // 
             // treeMenu
             // 
@@ -345,9 +346,9 @@ namespace SyNotebook
             // rtbNoteText
             // 
             this.rtbNoteText.AcceptsTab = true;
-            this.rtbNoteText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbNoteText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbNoteText.ContextMenuStrip = this.textMenu;
             this.rtbNoteText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.rtbNoteText.HideSelection = false;
@@ -357,8 +358,9 @@ namespace SyNotebook
             this.rtbNoteText.TabIndex = 1;
             this.rtbNoteText.Text = "";
             this.rtbNoteText.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbNoteText_LinkClicked);
-            this.rtbNoteText.MouseEnter += new System.EventHandler(this.rtbNoteText_MouseEnter);
             this.rtbNoteText.TextChanged += new System.EventHandler(this.rtbNoteText_TextChanged);
+            this.rtbNoteText.MouseEnter += new System.EventHandler(this.rtbNoteText_MouseEnter);
+            this.rtbNoteText.MouseUp += new System.Windows.Forms.MouseEventHandler(this.rtbNoteText_MouseUp);
             // 
             // textMenu
             // 
@@ -526,15 +528,16 @@ namespace SyNotebook
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "SyNotebook";
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-            this.Move += new System.EventHandler(this.MainForm_Move);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Move += new System.EventHandler(this.MainForm_Move);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.treeMenu.ResumeLayout(false);
             this.textMenu.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

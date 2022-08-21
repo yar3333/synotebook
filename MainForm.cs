@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace SyNotebook
@@ -703,13 +704,32 @@ namespace SyNotebook
 		}
 
 		private void miCut_Click(object sender, EventArgs e)
-		{
-			rtbNoteText.Cut();
+        {
+            rtbNoteText.Cut();
 		}
 
 		private void miCopy_Click(object sender, EventArgs e)
 		{
-			rtbNoteText.Copy();
+            if (rtbNoteText.SelectedText == "")
+            {
+                var start = rtbNoteText.GetCharIndexFromPosition(rtbMouseOnConectMenu.Location);
+                var n = start;
+                while (n >= 0)
+                {
+                    var s = rtbNoteText.Text.Substring(n);
+                    if (s.StartsWith("http://") || s.StartsWith("https://"))
+                    {
+                        var m = Regex.Match(s, @"^[^ \t(),.!\r\n""']+");
+                        if (m.Success && n + m.Length >= start)  Clipboard.SetText(m.Value);
+                        else break;
+                    }
+                    n--;
+                }
+            }
+            else
+            {
+                rtbNoteText.Copy();
+            }
 		}
 
 		private void miPaste_Click(object sender, EventArgs e)
@@ -781,6 +801,13 @@ namespace SyNotebook
         private void miProperties_Click(object sender, EventArgs e)
         {
             tree_MouseDoubleClick(null, null);
+        }
+
+        MouseEventArgs rtbMouseOnConectMenu;
+
+        private void rtbNoteText_MouseUp(object sender, MouseEventArgs e)
+        {
+            rtbMouseOnConectMenu = e;
         }
     }
 }
