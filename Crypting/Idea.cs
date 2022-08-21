@@ -1,19 +1,19 @@
 using System;
 
-namespace SYCrypt
+namespace SyNotebook.Crypting
 {
 	/// <summary>
-	/// Реализация алгоритма шифрации данных Idea.
+	/// Р РµР°Р»РёР·Р°С†РёСЏ Р°Р»РіРѕСЂРёС‚РјР° С€РёС„СЂР°С†РёРё РґР°РЅРЅС‹С… Idea.
 	/// </summary>
 	internal class IdeaBase
 	{
 		const int IDEA_ROUNDS = 8;
-		const int IDEA_KEY_SIZE = IDEA_ROUNDS*6 + 4;	// внутренний размер ключа в байтах
+		const int IDEA_KEY_SIZE = IDEA_ROUNDS*6 + 4;	// РІРЅСѓС‚СЂРµРЅРЅРёР№ СЂР°Р·РјРµСЂ РєР»СЋС‡Р° РІ Р±Р°Р№С‚Р°С…
 
 //		typedef UInt16 KeyIDEA[IDEA_KEY_SIZE];
 
 		/// <summary>
-		/// Умножает два числа по модулю 2^16 + 1 (причём нулевое значение аргумента соответствует тому, что он равен 2^16).
+		/// РЈРјРЅРѕР¶Р°РµС‚ РґРІР° С‡РёСЃР»Р° РїРѕ РјРѕРґСѓР»СЋ 2^16 + 1 (РїСЂРёС‡С‘Рј РЅСѓР»РµРІРѕРµ Р·РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ С‚РѕРјСѓ, С‡С‚Рѕ РѕРЅ СЂР°РІРµРЅ 2^16).
 		/// </summary>
 		static UInt16 mul(UInt16 x, UInt16 y)
 		{
@@ -41,7 +41,7 @@ namespace SYCrypt
 		}
 
 		/// <summary>
-		/// Инвертирует число.
+		/// РРЅРІРµСЂС‚РёСЂСѓРµС‚ С‡РёСЃР»Рѕ.
 		/// </summary>
 		static UInt16 inv(UInt16 x)
 		{
@@ -70,10 +70,10 @@ namespace SYCrypt
 		}
 
 		/// <summary>
-		/// Преобразует ключ шифрования в ключ расшифрования.
+		/// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РєР»СЋС‡ С€РёС„СЂРѕРІР°РЅРёСЏ РІ РєР»СЋС‡ СЂР°СЃС€РёС„СЂРѕРІР°РЅРёСЏ.
 		/// </summary>
-		/// <param name="dec_key">вычисляемый ключ для расшифрования (IDEA_KEY_SIZE элементов)</param>
-		/// <param name="enc_key">исходный ключ для шифрования (IDEA_KEY_SIZE элементов)</param>
+		/// <param name="dec_key">РІС‹С‡РёСЃР»СЏРµРјС‹Р№ РєР»СЋС‡ РґР»СЏ СЂР°СЃС€РёС„СЂРѕРІР°РЅРёСЏ (IDEA_KEY_SIZE СЌР»РµРјРµРЅС‚РѕРІ)</param>
+		/// <param name="enc_key">РёСЃС…РѕРґРЅС‹Р№ РєР»СЋС‡ РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ (IDEA_KEY_SIZE СЌР»РµРјРµРЅС‚РѕРІ)</param>
 		static void invertKey(UInt16[] dec_key, UInt16[] enc_key)
 		{
 			unchecked
@@ -102,10 +102,10 @@ namespace SYCrypt
 		}
 
 		/// <summary>
-		/// Создаёт внутренний ключ, используемый для шифрования.
+		/// РЎРѕР·РґР°С‘С‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РєР»СЋС‡, РёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ.
 		/// </summary>
-		/// <param name="key_out">создаваемый ключ (52 элемента)</param>
-		/// <param name="key_phraze">исходный ключ (8 элементов)</param>
+		/// <param name="key_out">СЃРѕР·РґР°РІР°РµРјС‹Р№ РєР»СЋС‡ (52 СЌР»РµРјРµРЅС‚Р°)</param>
+		/// <param name="key_phraze">РёСЃС…РѕРґРЅС‹Р№ РєР»СЋС‡ (8 СЌР»РµРјРµРЅС‚РѕРІ)</param>
 		static public void makeEncryptKey(UInt16[] key_out, UInt16[] key_phraze)
 		{
 			int i,j, k = 0;
@@ -121,10 +121,10 @@ namespace SYCrypt
 		}
 
 	  /// <summary>
-	  /// Создаёт внутренний ключ для расшифрования.
+	  /// РЎРѕР·РґР°С‘С‚ РІРЅСѓС‚СЂРµРЅРЅРёР№ РєР»СЋС‡ РґР»СЏ СЂР°СЃС€РёС„СЂРѕРІР°РЅРёСЏ.
 	  /// </summary>
-	  /// <param name="key_out">создаваемый ключ (52 элемента)</param>
-	  /// <param name="key_phraze">исходный ключ (8 элементов)</param>
+	  /// <param name="key_out">СЃРѕР·РґР°РІР°РµРјС‹Р№ РєР»СЋС‡ (52 СЌР»РµРјРµРЅС‚Р°)</param>
+	  /// <param name="key_phraze">РёСЃС…РѕРґРЅС‹Р№ РєР»СЋС‡ (8 СЌР»РµРјРµРЅС‚РѕРІ)</param>
 		static public void makeDecryptKey(UInt16[] key_out, UInt16[] key_phraze)
 		{
 			UInt16[] temp_key = new UInt16[IDEA_KEY_SIZE];
@@ -133,11 +133,11 @@ namespace SYCrypt
 		}
    
 		/// <summary>
-		/// Шифрует блок данных (4 слова * 2 байта = 8 байт).
+		/// РЁРёС„СЂСѓРµС‚ Р±Р»РѕРє РґР°РЅРЅС‹С… (4 СЃР»РѕРІР° * 2 Р±Р°Р№С‚Р° = 8 Р±Р°Р№С‚).
 		/// </summary>
-		/// <param name="BufIn">шифруемый блок данных (4 слова = 8 байт)</param>
-		/// <param name="BufOut">зашифрованный блок данных (4 слова = 8 байт)</param>
-		/// <param name="key">внутренний ключ шифрования</param>
+		/// <param name="BufIn">С€РёС„СЂСѓРµРјС‹Р№ Р±Р»РѕРє РґР°РЅРЅС‹С… (4 СЃР»РѕРІР° = 8 Р±Р°Р№С‚)</param>
+		/// <param name="BufOut">Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ Р±Р»РѕРє РґР°РЅРЅС‹С… (4 СЃР»РѕРІР° = 8 Р±Р°Р№С‚)</param>
+		/// <param name="key">РІРЅСѓС‚СЂРµРЅРЅРёР№ РєР»СЋС‡ С€РёС„СЂРѕРІР°РЅРёСЏ</param>
 		static public void encryptBlock(UInt16[] BufIn, UInt16[] BufOut, UInt16[] key)
 		{
 			UInt16 A, B, C, D, E, F;
@@ -192,7 +192,7 @@ namespace SYCrypt
 	}
 
 	/// <summary>
-	/// Реализует функционирование алгоритма шифрования Idea в режиме обратной связи по шифру.
+	/// Р РµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёРѕРЅРёСЂРѕРІР°РЅРёРµ Р°Р»РіРѕСЂРёС‚РјР° С€РёС„СЂРѕРІР°РЅРёСЏ Idea РІ СЂРµР¶РёРјРµ РѕР±СЂР°С‚РЅРѕР№ СЃРІСЏР·Рё РїРѕ С€РёС„СЂСѓ.
 	/// </summary>
 	public class IdeaCFB
 	{
@@ -202,11 +202,11 @@ namespace SYCrypt
 		UInt16[] encKey = new UInt16[52];
 		
 		/// <summary>
-		/// Инициализирует поток для шифрования.
+		/// РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РїРѕС‚РѕРє РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ.
 		/// </summary>
-		/// <param name="IV">вектор инициализации (8 элементов)</param>
-		/// <param name="key">ключ (8 элементов)</param>
-		public IdeaCFB(byte[] IV, UInt16[] key)
+		/// <param name="IV">РІРµРєС‚РѕСЂ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё (8 СЌР»РµРјРµРЅС‚РѕРІ)</param>
+		/// <param name="key">РєР»СЋС‡ (8 СЌР»РµРјРµРЅС‚РѕРІ)</param>
+		IdeaCFB(byte[] IV, UInt16[] key)
 		{
 			encIV = (byte[])IV.Clone();
 			decIV = (byte[])IV.Clone();
@@ -223,10 +223,10 @@ namespace SYCrypt
         }
         
         /// <summary>
-		/// Шифрует байт данных.
+		/// РЁРёС„СЂСѓРµС‚ Р±Р°Р№С‚ РґР°РЅРЅС‹С….
 		/// </summary>
-		/// <param name="p">исходный байт данных</param>
-		public byte Encrypt(byte p)
+		/// <param name="p">РёСЃС…РѕРґРЅС‹Р№ Р±Р°Р№С‚ РґР°РЅРЅС‹С…</param>
+		byte Encrypt(byte p)
 		{
 			UInt16[] iv16 = new UInt16[4];
 			iv16[0] = (UInt16)((encIV[1]<<8) | encIV[0]);
@@ -245,10 +245,10 @@ namespace SYCrypt
 		}
 
 		/// <summary>
-		/// Расшифровывает байт данных.
+		/// Р Р°СЃС€РёС„СЂРѕРІС‹РІР°РµС‚ Р±Р°Р№С‚ РґР°РЅРЅС‹С….
 		/// </summary>
-		/// <param name="c">зашифрованный байт данных</param>
-		public byte Decrypt(byte c)
+		/// <param name="c">Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Р№ Р±Р°Р№С‚ РґР°РЅРЅС‹С…</param>
+		byte Decrypt(byte c)
 		{
 			UInt16[] iv16 = new UInt16[4];
 			iv16[0] = (UInt16)((decIV[1]<<8) | decIV[0]);
@@ -266,12 +266,12 @@ namespace SYCrypt
 			return r;
 		}
 		
-		public void Encrypt(byte[] buf)
+		void Encrypt(byte[] buf)
 		{
 			for (int i=0;i<buf.Length;i++) buf[i] = Encrypt(buf[i]);
 		}
 
-		public void Decrypt(byte[] buf)
+		void Decrypt(byte[] buf)
 		{
 			for (int i=0;i<buf.Length;i++) buf[i] = Decrypt(buf[i]);
 		}
@@ -291,9 +291,9 @@ namespace SYCrypt
         }
 
         /// <summary>
-        /// Преобразует пароль из шестнадцатиричного числа в массив 8-ми элементов.
+        /// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РїР°СЂРѕР»СЊ РёР· С€РµСЃС‚РЅР°РґС†Р°С‚РёСЂРёС‡РЅРѕРіРѕ С‡РёСЃР»Р° РІ РјР°СЃСЃРёРІ 8-РјРё СЌР»РµРјРµРЅС‚РѕРІ.
         /// </summary>
-        /// <param name="password">представление пароля hex числом</param>
+        /// <param name="password">РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ РїР°СЂРѕР»СЏ hex С‡РёСЃР»РѕРј</param>
         /// <returns></returns>
         static UInt16[] ConvertPassword(string password)
         {

@@ -439,7 +439,7 @@ namespace SyNotebook
             {
                 if (password==null || password.Length==0) throw new BadPassword(this);
                 
-                SYCrypt.IdeaCFB crypter = new SYCrypt.IdeaCFB(password);
+                var crypter = new Crypting.IdeaCFB(password);
 
                 string potenName = "";
                 if (!isTopLevelCryptedItem) potenName = crypter.Decrypt(name);
@@ -480,7 +480,7 @@ namespace SyNotebook
             if (!isCrypted)
             {
                 textCRC32 = GetTextCRC((!isTopLevelCryptedItem ? name : "") + text);
-                SYCrypt.IdeaCFB crypter = new SYCrypt.IdeaCFB(password);
+                var crypter = new Crypting.IdeaCFB(password);
 
                 if (!isTopLevelCryptedItem) name = crypter.Encrypt(name);
                 text = crypter.Encrypt(text);
