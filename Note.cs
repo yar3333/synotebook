@@ -125,8 +125,8 @@ namespace SyNotebook
         Flags flags = Flags.TopLevelCryptedItem;
         
         /// <summary>
-        /// Является ли данный элемент самым верхним в списке зашифрованных.
-        /// Если да, и isCrypted=true, то name не зашифрован, а если нет, то зашифрован
+        /// РЇРІР»СЏРµС‚СЃСЏ Р»Рё РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ СЃР°РјС‹Рј РІРµСЂС…РЅРёРј РІ СЃРїРёСЃРєРµ Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹С….
+        /// Р•СЃР»Рё РґР°, Рё isCrypted=true, С‚Рѕ name РЅРµ Р·Р°С€РёС„СЂРѕРІР°РЅ, Р° РµСЃР»Рё РЅРµС‚, С‚Рѕ Р·Р°С€РёС„СЂРѕРІР°РЅ
         /// </summary>
         bool isTopLevelCryptedItem
         {
@@ -140,7 +140,7 @@ namespace SyNotebook
         }
         
         /// <summary>
-        /// Содержит ли text зашифрованные данные или данные в открытом виде
+        /// РЎРѕРґРµСЂР¶РёС‚ Р»Рё text Р·Р°С€РёС„СЂРѕРІР°РЅРЅС‹Рµ РґР°РЅРЅС‹Рµ РёР»Рё РґР°РЅРЅС‹Рµ РІ РѕС‚РєСЂС‹С‚РѕРј РІРёРґРµ
         /// </summary>
         bool isCrypted
         {
@@ -157,10 +157,10 @@ namespace SyNotebook
 
         
         /// <summary>
-        /// Показывает - заблокирован ли объект в текущий момент времени. Имеет смысл только если isCrypted=true;
-        /// если isLocked & isTopLevelCryptedItem - поле text защифровано;
-        /// если isLocked & !isTopLevelCryptedItem - поля name и text защифрованы;
-        /// если !isLocked - все поля содержать открытый текст.
+        /// РџРѕРєР°Р·С‹РІР°РµС‚ - Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ Р»Рё РѕР±СЉРµРєС‚ РІ С‚РµРєСѓС‰РёР№ РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё. РРјРµРµС‚ СЃРјС‹СЃР» С‚РѕР»СЊРєРѕ РµСЃР»Рё isCrypted=true;
+        /// РµСЃР»Рё isLocked & isTopLevelCryptedItem - РїРѕР»Рµ text Р·Р°С‰РёС„СЂРѕРІР°РЅРѕ;
+        /// РµСЃР»Рё isLocked & !isTopLevelCryptedItem - РїРѕР»СЏ name Рё text Р·Р°С‰РёС„СЂРѕРІР°РЅС‹;
+        /// РµСЃР»Рё !isLocked - РІСЃРµ РїРѕР»СЏ СЃРѕРґРµСЂР¶Р°С‚СЊ РѕС‚РєСЂС‹С‚С‹Р№ С‚РµРєСЃС‚.
         /// </summary>
         bool isLocked = true;
         public bool IsLocked
@@ -182,8 +182,8 @@ namespace SyNotebook
         }
 
         /// <summary>
-        /// Используется только если isCrypted=true 
-        /// и содержит код для всех защифрованных частей
+        /// РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РµСЃР»Рё isCrypted=true 
+        /// Рё СЃРѕРґРµСЂР¶РёС‚ РєРѕРґ РґР»СЏ РІСЃРµС… Р·Р°С‰РёС„СЂРѕРІР°РЅРЅС‹С… С‡Р°СЃС‚РµР№
         /// </summary>
         UInt32 textCRC32;
         
@@ -431,21 +431,31 @@ namespace SyNotebook
         }
 
         /// <summary>
-        /// Переводит шифрованный объект во временно открытое состояние.
+        /// РџРµСЂРµРІРѕРґРёС‚ С€РёС„СЂРѕРІР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РІРѕ РІСЂРµРјРµРЅРЅРѕ РѕС‚РєСЂС‹С‚РѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ.
         /// </summary>
         public void Unlock(string password)
         {
             if (isCrypted && isLocked)
             {
-                if (password==null || password.Length==0) throw new BadPassword(this);
+                if (password == null || password.Length == 0) throw new BadPassword(this);
                 
-                string potenName = "";
-                if (!isTopLevelCryptedItem) potenName = Crypting.IdeaCFB.Decrypt(name, password);
+                string potenName = null;
+                string potenText = null;
+                
+                try
+                {
+                    potenName = !isTopLevelCryptedItem ? Crypting.Aes.Decrypt(name, password) : "";
+                    potenText = Crypting.Aes.Decrypt(text, password);
+                }
+                catch {}
 
-                string potenText = Crypting.IdeaCFB.Decrypt(text, password);
-
-                var crc = GetTextCRC(potenName + potenText);
-                if (crc != textCRC32) throw new BadPassword(this);
+                if (potenName == null || potenText == null || GetTextCRC(potenName + potenText) != textCRC32) 
+                {
+                    var idea = new Crypting.IdeaCFB(password);
+                    potenName = !isTopLevelCryptedItem ? idea.Decrypt(name) : "";
+                    potenText = idea.Decrypt(text);
+                    if (GetTextCRC(potenName + potenText) != textCRC32) throw new BadPassword(this); 
+                }
 
                 this.password = password;
 
@@ -457,7 +467,7 @@ namespace SyNotebook
         }
 
         /// <summary>
-        /// Переводит шифрованный объект в защифрованное состояние.
+        /// РџРµСЂРµРІРѕРґРёС‚ С€РёС„СЂРѕРІР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ РІ Р·Р°С‰РёС„СЂРѕРІР°РЅРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ.
         /// </summary>
         public void Lock()
         {
@@ -469,18 +479,16 @@ namespace SyNotebook
         }
 
         /// <summary>
-        /// Делает узел шифрованным. Узел не должен быть защищён паролем.
+        /// Р”РµР»Р°РµС‚ СѓР·РµР» С€РёС„СЂРѕРІР°РЅРЅС‹Рј. РЈР·РµР» РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°С‰РёС‰С‘РЅ РїР°СЂРѕР»РµРј.
         /// </summary>
-        /// <param name="password"></param>
-        /// <param name="isTopLevelCryptedItem"></param>
         public void SetPassword(string password, bool isTopLevelCryptedItem)
         {
             if (!isCrypted)
             {
                 textCRC32 = GetTextCRC((!isTopLevelCryptedItem ? name : "") + text);
                 
-                if (!isTopLevelCryptedItem) name = Crypting.IdeaCFB.Encrypt(name, password);
-                text = Crypting.IdeaCFB.Encrypt(text, password);
+                if (!isTopLevelCryptedItem) name = Crypting.Aes.Encrypt(name, password);
+                text = Crypting.Aes.Encrypt(text, password);
 
                 isCrypted = true;
                 isLocked = true;
@@ -491,7 +499,7 @@ namespace SyNotebook
         }
 
         /// <summary>
-        /// Убирает шифрацию узла вообще. Узел не должнен быть заблокирован.
+        /// РЈР±РёСЂР°РµС‚ С€РёС„СЂР°С†РёСЋ СѓР·Р»Р° РІРѕРѕР±С‰Рµ. РЈР·РµР» РЅРµ РґРѕР»Р¶РЅРµРЅ Р±С‹С‚СЊ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
         /// </summary>
         public void RemovePassword()
         {
