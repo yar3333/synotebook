@@ -35,14 +35,14 @@ namespace SyNotebook.Crypting
 
         public string Encrypt(string s)
         {
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
+            var buf = System.Text.Encoding.Default.GetBytes(s);
             Encrypt(buf);
             return System.Text.Encoding.Default.GetString(buf);
         }
 
         public string Decrypt(string s)
         {
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
+            var buf = System.Text.Encoding.Default.GetBytes(s);
             Decrypt(buf);
             return System.Text.Encoding.Default.GetString(buf);
         }
@@ -53,17 +53,17 @@ namespace SyNotebook.Crypting
         /// <param name="p">исходный байт данных</param>
         byte Encrypt(byte p)
 		{
-			UInt16[] iv16 = new UInt16[4];
+			var iv16 = new UInt16[4];
 			iv16[0] = (UInt16)((encIV[1]<<8) | encIV[0]);
 			iv16[1] = (UInt16)((encIV[3]<<8) | encIV[2]);
 			iv16[2] = (UInt16)((encIV[5]<<8) | encIV[4]);
 			iv16[3] = (UInt16)((encIV[7]<<8) | encIV[6]);
 			
-			UInt16[] tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
-			byte k = (byte)tbuf[0];
-			byte r = (byte)(p ^ k);
+			var tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
+			var k = (byte)tbuf[0];
+			var r = (byte)(p ^ k);
 			
-			for (int i=encIV.Length-1;i>0;i--) encIV[i] = encIV[i-1];
+			for (var i=encIV.Length-1;i>0;i--) encIV[i] = encIV[i-1];
 			encIV[0] = r;
 			
 			return r;
@@ -75,17 +75,17 @@ namespace SyNotebook.Crypting
 		/// <param name="c">зашифрованный байт данных</param>
 		byte Decrypt(byte c)
 		{
-			UInt16[] iv16 = new UInt16[4];
+			var iv16 = new UInt16[4];
 			iv16[0] = (UInt16)((decIV[1]<<8) | decIV[0]);
 			iv16[1] = (UInt16)((decIV[3]<<8) | decIV[2]);
 			iv16[2] = (UInt16)((decIV[5]<<8) | decIV[4]);
 			iv16[3] = (UInt16)((decIV[7]<<8) | decIV[6]);
 			
-			UInt16[] tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
-			byte k = (byte)tbuf[0];
-			byte r = (byte)(c ^ k);
+			var tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
+			var k = (byte)tbuf[0];
+			var r = (byte)(c ^ k);
 			
-			for (int i=decIV.Length-1;i>0;i--) decIV[i] = decIV[i-1];
+			for (var i=decIV.Length-1;i>0;i--) decIV[i] = decIV[i-1];
 			decIV[0] = c;
 			
 			return r;
@@ -93,12 +93,12 @@ namespace SyNotebook.Crypting
 		
 		void Encrypt(byte[] buf)
 		{
-			for (int i=0;i<buf.Length;i++) buf[i] = Encrypt(buf[i]);
+			for (var i=0;i<buf.Length;i++) buf[i] = Encrypt(buf[i]);
 		}
 
 		void Decrypt(byte[] buf)
 		{
-			for (int i=0;i<buf.Length;i++) buf[i] = Decrypt(buf[i]);
+			for (var i=0;i<buf.Length;i++) buf[i] = Decrypt(buf[i]);
 		}
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace SyNotebook.Crypting
         /// <returns></returns>
         static UInt16[] ConvertPassword(string password)
         {
-            byte[] pas = System.Text.Encoding.Default.GetBytes(password);
-            UInt16[] buf = new UInt16[8];
-            for (int i = 0; i < pas.Length; i+=2)
+            var pas = System.Text.Encoding.Default.GetBytes(password);
+            var buf = new UInt16[8];
+            for (var i = 0; i < pas.Length; i+=2)
             {
                 buf[i % 8] = (UInt16)(((UInt16)pas[i % pas.Length]) | (((UInt16)pas[(i + 1) % pas.Length]) << 8));
             }
@@ -141,7 +141,7 @@ namespace SyNotebook.Crypting
                 {
                     if (y != 0)
                     {
-                        UInt32 t = (UInt32)x * y;
+                        var t = (UInt32)x * y;
                         y = (UInt16)t;
                         x = (UInt16)(t >> 16);
                         return (UInt16)(y - x + (y < x ? 1u : 0u));
@@ -196,8 +196,8 @@ namespace SyNotebook.Crypting
         {
             unchecked
             {
-                int i = 0;
-                int j = 48;
+                var i = 0;
+                var j = 48;
                 dec_key[i++] = inv(enc_key[j++]);
                 dec_key[i++] = (UInt16)(-enc_key[j++]);
                 dec_key[i++] = (UInt16)(-enc_key[j++]);
@@ -213,7 +213,7 @@ namespace SyNotebook.Crypting
                     dec_key[i++] = inv(enc_key[j + 3]);
                     j -= 6;
                 }
-                UInt16 t = dec_key[i - 3];
+                var t = dec_key[i - 3];
                 dec_key[i - 3] = dec_key[i - 2];
                 dec_key[i - 2] = t;
             }
@@ -245,7 +245,7 @@ namespace SyNotebook.Crypting
         /// <param name="key_phraze">исходный ключ (8 элементов)</param>
         static public void makeDecryptKey(UInt16[] key_out, UInt16[] key_phraze)
         {
-            UInt16[] temp_key = new UInt16[IDEA_KEY_SIZE];
+            var temp_key = new UInt16[IDEA_KEY_SIZE];
             makeEncryptKey(temp_key, key_phraze);
             invertKey(key_out, temp_key);
         }
@@ -260,7 +260,7 @@ namespace SyNotebook.Crypting
         {
             UInt16 A, B, C, D, E, F;
 
-            int i = 0;
+            var i = 0;
 
             unchecked
             {
@@ -269,7 +269,7 @@ namespace SyNotebook.Crypting
                 C = BufIn[2];
                 D = BufIn[3];
 
-                for (int j = 0; j < 8; j++)
+                for (var j = 0; j < 8; j++)
                 {
                     A = mul(A, key[i++]);
                     B += key[i++];
@@ -296,13 +296,13 @@ namespace SyNotebook.Crypting
 
         static public UInt64 encryptBlock(UInt64 p, UInt16[] key)
         {
-            UInt16[] buf = new UInt16[4];
+            var buf = new UInt16[4];
             buf[0] = (UInt16)(p & 0xFFFF);
             buf[1] = (UInt16)((p >> 16) & 0xFFFF);
             buf[2] = (UInt16)((p >> 32) & 0xFFFF);
             buf[3] = (UInt16)((p >> 48) & 0xFFFF);
 
-            UInt16[] r = new UInt16[4];
+            var r = new UInt16[4];
             encryptBlock(buf, r, key);
 
             return ((UInt64)r[3] << 48) | ((UInt64)r[2] << 32) | ((UInt64)r[1] << 16) | ((UInt64)r[0]);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace SyNotebook
@@ -16,7 +15,7 @@ namespace SyNotebook
 
 		public static void Start()
 		{
-			thread = new Thread(new ThreadStart(Loading));
+			thread = new Thread(Loading);
 			thread.Start();
 		}
 		
@@ -31,14 +30,14 @@ namespace SyNotebook
 		{
 			while (!needToStop && notesToLoad.Count>0)
 			{
-				Note note = notesToLoad[0];
+				var note = notesToLoad[0];
 				note.ContinueLoading();
 				notesToLoad.RemoveAt(0);
 			}
 			
 			if (needToStop)
 			{
-				foreach (Note note in notesToLoad) note.AbortLoading();
+				foreach (var note in notesToLoad) note.AbortLoading();
 			}
 		}
 	}

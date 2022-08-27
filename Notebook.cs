@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 
@@ -21,8 +20,8 @@ namespace SyNotebook
 
         List<Note> getNotesByParentID(Guid parentID)
         {
-            List<Note> r = new List<Note>();
-            foreach (Guid noteID in notes.Keys)
+            var r = new List<Note>();
+            foreach (var noteID in notes.Keys)
             {
                 if (notes[noteID].ParentID == parentID) r.Add(notes[noteID]);
             }
@@ -78,18 +77,18 @@ namespace SyNotebook
             this.pathToDataFolder = pathToDataFolder;
             this.imageListLength = imageListLength;
             
-            if (!System.IO.Directory.Exists(pathToDataFolder)) System.IO.Directory.CreateDirectory(pathToDataFolder);
+            if (!Directory.Exists(pathToDataFolder)) Directory.CreateDirectory(pathToDataFolder);
             
-            List<NoteFile> noteFiles = new List<NoteFile>();
-            foreach (string s in System.IO.Directory.GetFiles(pathToDataFolder,"*.note"))
+            var noteFiles = new List<NoteFile>();
+            foreach (var s in Directory.GetFiles(pathToDataFolder,"*.note"))
             {
-            	noteFiles.Add(new NoteFile(s, System.IO.File.GetLastWriteTime(s)));
+            	noteFiles.Add(new NoteFile(s, File.GetLastWriteTime(s)));
             }
             noteFiles.Sort();
             
-            for (int i=noteFiles.Count-1;i>=0;i--)
+            for (var i=noteFiles.Count-1;i>=0;i--)
             {
-            	Note note = new Note(pathToDataFolder, noteFiles[i].FileName);
+            	var note = new Note(pathToDataFolder, noteFiles[i].FileName);
                 notes.Add(note.ID, note);
             }
             
@@ -102,9 +101,9 @@ namespace SyNotebook
             GC.Collect();
             GC.WaitForPendingFinalizers();
         	
-        	foreach (Guid noteID in notes.Keys)
+        	foreach (var noteID in notes.Keys)
             {
-	            Note note = notes[noteID];
+	            var note = notes[noteID];
             	
             	try
 	            {
@@ -119,7 +118,7 @@ namespace SyNotebook
 	                    MessageBoxIcon.Warning
 	                );
 	
-	                System.IO.File.Delete(note.FileName);
+	                File.Delete(note.FileName);
 	                note.Write(pathToDataFolder);
 	            }
             }
@@ -137,10 +136,10 @@ namespace SyNotebook
                 root.Expand();
             }
 
-            List<Note> childNotes = getNotesByParentID(((Note)root.Tag).ID);
-            foreach (Note note in childNotes)
+            var childNotes = getNotesByParentID(((Note)root.Tag).ID);
+            foreach (var note in childNotes)
             {
-                TreeNode node = new TreeNode();
+                var node = new TreeNode();
                 try { node.Text = note.Name; }
                 catch (Note.BadPassword) {}
                 node.Tag = note;
@@ -154,7 +153,7 @@ namespace SyNotebook
 
         void updateNodeImage(TreeNode node)
         {
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             if (!note.IsCrypted) node.ImageIndex = (int)Images.Uncrypted * imageListLength + note.ImageIndex;
             else node.ImageIndex = (note.IsLocked ? (int)Images.Locked : (int)Images.UnLocked) * imageListLength + note.ImageIndex;
             node.SelectedImageIndex = node.ImageIndex;
@@ -162,10 +161,10 @@ namespace SyNotebook
         
         public TreeNode AddNote(TreeNode root, string name, int imageIndex)
         {
-            Note note = new Note(Guid.NewGuid(), ((Note)root.Tag).ID, name, "", root.Nodes.Count, imageIndex, pathToDataFolder);
+            var note = new Note(Guid.NewGuid(), ((Note)root.Tag).ID, name, "", root.Nodes.Count, imageIndex, pathToDataFolder);
             notes.Add(note.ID, note);
 
-            TreeNode node = new TreeNode(note.Name);
+            var node = new TreeNode(note.Name);
             node.Tag = note;
             root.Nodes.Add(node);
 
@@ -176,7 +175,7 @@ namespace SyNotebook
 
         public void EditNote(TreeNode root, string name, int imageIndex)
         {
-            Note note = (Note)root.Tag;
+            var note = (Note)root.Tag;
             note.Name = name;
             root.Text = name;
             note.ImageIndex = imageIndex;
@@ -194,8 +193,8 @@ namespace SyNotebook
 
         void DeleteNote(Note note)
         {
-            List<Note> childs = getNotesByParentID(note.ID);
-            foreach (Note child in childs) DeleteNote(child);
+            var childs = getNotesByParentID(note.ID);
+            foreach (var child in childs) DeleteNote(child);
             notes.Remove(note.ID);
             note.Delete();
         }
@@ -204,13 +203,13 @@ namespace SyNotebook
         {
             node.Parent.Nodes.Remove(node);
 
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             DeleteNote(note);
         }
 
         public void UnlockNote(TreeNode node, string password)
         {
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             note.Unlock(password);
             
             node.Text = note.Name;
@@ -231,7 +230,7 @@ namespace SyNotebook
 
         public void LockNote(TreeNode node)
         {
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             note.Lock();
             
             node.Text = "";
@@ -249,7 +248,7 @@ namespace SyNotebook
 
         void setPassword(TreeNode node, string password, bool isTopLevelCryptedItem)
         {
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             note.SetPassword(password, isTopLevelCryptedItem);
             updateNodeImage(node);
 
@@ -260,7 +259,7 @@ namespace SyNotebook
         {
             UnlockNote(node, password);
             
-            Note note = (Note)node.Tag;
+            var note = (Note)node.Tag;
             note.RemovePassword();
             updateNodeImage(node);
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
@@ -192,7 +191,7 @@ namespace SyNotebook
         { 
         	get 
         	{
-        		return System.IO.Path.Combine(pathToDataFolder, id+".note");
+        		return Path.Combine(pathToDataFolder, id+".note");
         	}
        	}
         
@@ -207,8 +206,8 @@ namespace SyNotebook
 
         void readFSFlags(Stream finp)
         {
-            int n = finp.ReadByte(); if (n == -1) throw new Note.InputStreamEndReached();
-            byte flags = (byte)n;
+            var n = finp.ReadByte(); if (n == -1) throw new InputStreamEndReached();
+            var flags = (byte)n;
         }
 
         void writeFSFlags(Stream fout)
@@ -228,7 +227,7 @@ namespace SyNotebook
             this.imageIndex = imageIndex;
             
             this.pathToDataFolder = pathToDataFolder;
-            this.lastTextAccessDate = DateTime.Now;
+            lastTextAccessDate = DateTime.Now;
         }
 
         static void writeInt(Stream fout, int n)
@@ -241,10 +240,10 @@ namespace SyNotebook
 
         static int readInt(Stream finp)
         {
-            int a = finp.ReadByte();
-            int b = finp.ReadByte();
-            int c = finp.ReadByte();
-            int d = finp.ReadByte();
+            var a = finp.ReadByte();
+            var b = finp.ReadByte();
+            var c = finp.ReadByte();
+            var d = finp.ReadByte();
             
             return a | (b << 8) | (c << 16) | (d << 24);
         }
@@ -269,23 +268,23 @@ namespace SyNotebook
 
         static void writeString(Stream fout, string s)
         {
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
-            Int32 size = buf.Length;
+            var buf = Encoding.Default.GetBytes(s);
+            var size = buf.Length;
             writeInt(fout, size);
             fout.Write(buf, 0, buf.Length);
         }
 
         static string readString(Stream finp)
         {
-            Int32 size = readInt(finp); if (size==0) return "";
-            byte[] buf = new byte[size];
+            var size = readInt(finp); if (size==0) return "";
+            var buf = new byte[size];
             finp.Read(buf, 0, buf.Length);
-            return System.Text.Encoding.Default.GetString(buf);
+            return Encoding.Default.GetString(buf);
         }
 
         void readFlags(Stream finp)
         {
-            int n = finp.ReadByte(); if (n == -1) throw new InputStreamEndReached();
+            var n = finp.ReadByte(); if (n == -1) throw new InputStreamEndReached();
             flags = (Flags)(byte)n;
         }
 
@@ -299,20 +298,20 @@ namespace SyNotebook
         	isWasChanged = false;
             this.pathToDataFolder = pathToDataFolder;
         	
-            lastTextAccessDate = System.IO.File.GetLastWriteTime(fileName);
+            lastTextAccessDate = File.GetLastWriteTime(fileName);
 
-            FileStream finp = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var finp = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
             readFSFlags(finp);
             
-            ICSharpCode.SharpZipLib.GZip.GZipInputStream zippedFINP = new ICSharpCode.SharpZipLib.GZip.GZipInputStream(finp);
+            var zippedFINP = new ICSharpCode.SharpZipLib.GZip.GZipInputStream(finp);
 
             readFlags(zippedFINP);
 
-            byte[] id_bytes = new byte[16];
+            var id_bytes = new byte[16];
             zippedFINP.Read(id_bytes,0,16);
             id = new Guid(id_bytes);
 
-            byte[] parentID_bytes = new byte[16];
+            var parentID_bytes = new byte[16];
             zippedFINP.Read(parentID_bytes, 0, 16);
             parentID = new Guid(parentID_bytes);
 
@@ -327,7 +326,7 @@ namespace SyNotebook
             
             NotesAsyncLoader.Add(this);
 
-            loadedFileDate = System.IO.File.GetLastWriteTime(fileName);
+            loadedFileDate = File.GetLastWriteTime(fileName);
         }
 
         Stream suspended_zippedFINP;
@@ -370,26 +369,26 @@ namespace SyNotebook
         	
         	if (!isWasChanged)
         	{
-        		System.IO.File.SetLastWriteTime(FileName, lastTextAccessDate);
+        		File.SetLastWriteTime(FileName, lastTextAccessDate);
         		return;
         	}
 
-        	string newFileName = System.IO.Path.Combine(pathToDataFolder,id+".note");
+        	var newFileName = Path.Combine(pathToDataFolder,id+".note");
         	if (newFileName == FileName
-                && System.IO.File.Exists(newFileName)
-                && System.IO.File.GetLastWriteTime(newFileName) != loadedFileDate
+                && File.Exists(newFileName)
+                && File.GetLastWriteTime(newFileName) != loadedFileDate
             ) throw new FileUpdatedOutsideProgram(id,name);
 
-            if (System.IO.File.Exists(FileName))
+            if (File.Exists(FileName))
             {
-				if (System.IO.File.Exists(FileName+".bak")) System.IO.File.Delete(FileName+".bak");
-				System.IO.File.Move(FileName,FileName+".bak");
+				if (File.Exists(FileName+".bak")) File.Delete(FileName+".bak");
+				File.Move(FileName,FileName+".bak");
             }
             
-            FileStream fout = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            var fout = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.None);
             writeFSFlags(fout);
 
-            ICSharpCode.SharpZipLib.GZip.GZipOutputStream zippedFOUT = new ICSharpCode.SharpZipLib.GZip.GZipOutputStream(fout);
+            var zippedFOUT = new ICSharpCode.SharpZipLib.GZip.GZipOutputStream(fout);
 
             writeFlags(zippedFOUT);
             
@@ -410,9 +409,9 @@ namespace SyNotebook
             fout.Close();
             fout.Dispose();
             
-            System.IO.File.SetLastWriteTime(FileName, lastTextAccessDate);
+            File.SetLastWriteTime(FileName, lastTextAccessDate);
 
-            if (System.IO.File.Exists(FileName+".bak")) System.IO.File.Delete(FileName+".bak");
+            if (File.Exists(FileName+".bak")) File.Delete(FileName+".bak");
             
             isWasChanged = false;
         }
@@ -421,8 +420,8 @@ namespace SyNotebook
         {
             UInt32 r = 0;
 
-            byte[] buf = System.Text.Encoding.Default.GetBytes(s);
-            for (int i = 0; i < buf.Length; i++)
+            var buf = Encoding.Default.GetBytes(s);
+            for (var i = 0; i < buf.Length; i++)
             {
                 unchecked { r += buf[i]; }
             }
@@ -506,13 +505,13 @@ namespace SyNotebook
             if (isCrypted && !isLocked)
             {
                 isCrypted = false;
-                this.password = "";
+                password = "";
             }
         }
         
         public void Delete()
         {
-        	if (System.IO.File.Exists(FileName)) System.IO.File.Delete(FileName);
+        	if (File.Exists(FileName)) File.Delete(FileName);
         }
     }
 }

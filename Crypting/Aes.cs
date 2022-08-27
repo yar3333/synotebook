@@ -14,7 +14,7 @@ namespace SyNotebook.Crypting
             {
                 var passwordBytes = Encoding.UTF8.GetBytes(password);
 
-                AES.Key = SHA256Managed.Create().ComputeHash(passwordBytes);
+                AES.Key = SHA256.Create().ComputeHash(passwordBytes);
                 //AES.IV = MD5.Create().ComputeHash(passwordBytes);
                 AES.GenerateIV();
                 AES.Mode = CipherMode.CBC;
@@ -41,7 +41,7 @@ namespace SyNotebook.Crypting
             {
                 var passwordBytes = Encoding.UTF8.GetBytes(password);
 
-                AES.Key = SHA256Managed.Create().ComputeHash(passwordBytes);
+                AES.Key = SHA256.Create().ComputeHash(passwordBytes);
                 //AES.IV = MD5.Create().ComputeHash(passwordBytes);
                 AES.Mode = CipherMode.CBC;
                 AES.Padding = PaddingMode.PKCS7;

@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -14,52 +13,52 @@ namespace SyNotebook
         static readonly string pathToDataFolder = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Notes";
         static readonly string pathToIniFile = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\SyNotebook.ini";
 
-        Notebook notebook;
+        private readonly Notebook notebook;
 
-        TreeNode draggedNode = null;
+        private TreeNode draggedNode;
 
-        System.Drawing.Font proportionalFont = new System.Drawing.Font(FontFamily.GenericSansSerif, 10);
-        System.Drawing.Font monospaceFont = new System.Drawing.Font(FontFamily.GenericMonospace, 10);
+        private Font proportionalFont = new Font(FontFamily.GenericSansSerif, 10);
+        private Font monospaceFont = new Font(FontFamily.GenericMonospace, 10);
 
-        private NotifyIcon trayIcon = new NotifyIcon();
-        private System.Drawing.Rectangle rcSaveWinPos;
-        private System.Windows.Forms.FormWindowState lastWinState;
+        private readonly NotifyIcon trayIcon = new NotifyIcon();
+        private Rectangle rcSaveWinPos;
+        private FormWindowState lastWinState;
 
-        ImageList imageList = new ImageList();
+        private readonly ImageList imageList = new ImageList();
         
         public MainForm()
         {
             InitializeComponent();
             
-            System.Reflection.Assembly ass = System.Reflection.Assembly.GetExecutingAssembly();
-            trayIcon.Icon = new Icon(ass.GetManifestResourceStream("SyNotebook.Images.App.ico"));
-            trayIcon.Click += new EventHandler(trayIcon_Click);
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            trayIcon.Icon = new Icon(assembly.GetManifestResourceStream("SyNotebook.Images.App.ico"));
+            trayIcon.Click += trayIcon_Click;
 
             // обработка imageList - создание элементов с подкрашенными уголками
 
-            for (int i = 0; i < baseImageList.Images.Count; i++)
+            for (var i = 0; i < baseImageList.Images.Count; i++)
             {
 				imageList.Images.Add(baseImageList.Images[i]);
 			}
 
-            for (int i = 0; i < baseImageList.Images.Count; i++)
+            for (var i = 0; i < baseImageList.Images.Count; i++)
             {
-                Image img = baseImageList.Images[i];
-                Bitmap imgLocked = new Bitmap(img);
-                for (int y=0;y<6;y++)
-                for (int x = img.Width - (5 - y); x < img.Width; x++)
+                var img = baseImageList.Images[i];
+                var imgLocked = new Bitmap(img);
+                for (var y=0;y<6;y++)
+                for (var x = img.Width - (5 - y); x < img.Width; x++)
                 {
                     imgLocked.SetPixel(x, y, Color.Red);
                 }
                 imageList.Images.Add(imgLocked);
             }
 
-            for (int i = 0; i < baseImageList.Images.Count; i++)
+            for (var i = 0; i < baseImageList.Images.Count; i++)
             {
-                Image img = baseImageList.Images[i];
-                Bitmap imgUnLocked = new Bitmap(img);
-                for (int y = 0; y < 6; y++)
-                for (int x = img.Width - (5 - y); x < img.Width; x++)
+                var img = baseImageList.Images[i];
+                var imgUnLocked = new Bitmap(img);
+                for (var y = 0; y < 6; y++)
+                for (var x = img.Width - (5 - y); x < img.Width; x++)
                 {
                     imgUnLocked.SetPixel(x, y, Color.Green);
                 }
@@ -86,7 +85,7 @@ namespace SyNotebook
 
         void AutoFillNotePositions(TreeNode root)
         {
-			Note note = (Note)root.Tag;
+			var note = (Note)root.Tag;
 			if (note!=null) note.Position = root.Index;
 			foreach (TreeNode node in root.Nodes) AutoFillNotePositions(node);
         }
@@ -110,11 +109,11 @@ namespace SyNotebook
         {
             if (tree.SelectedNode==null) return;
             
-            NoteForm form = new NoteForm(baseImageList);
+            var form = new NoteForm(baseImageList);
             if (form.ShowDialog(this)==DialogResult.OK)
             {
-                TreeNode dropNode = tree.SelectedNode;
-                Note dropNote = (Note)dropNode.Tag;
+                var dropNode = tree.SelectedNode;
+                var dropNote = (Note)dropNode.Tag;
 				
 				if (!dropNote.IsCrypted)
 				{
@@ -122,12 +121,12 @@ namespace SyNotebook
 				}
 				else
 				{
-					TreeNode dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
-					Note dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
+					var dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
+					var dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
                     
 					if (unlockSubTree(dropNodeTopCrypted,"¬ведите пароль"))
 					{
-						string password = dropNoteTopCrypted.Password;
+						var password = dropNoteTopCrypted.Password;
 						notebook.RemovePassword(dropNodeTopCrypted, password);
 						tree.SelectedNode = notebook.AddNote(dropNode, form.tbBookmarkName.Text, form.ImageIndex);
 						notebook.SetPassword(dropNodeTopCrypted,password);
@@ -141,7 +140,7 @@ namespace SyNotebook
         {
             tree.SelectedNode = draggedNode;
             draggedNode = (TreeNode)e.Item;
-            string strItem = e.Item.ToString();
+            var strItem = e.Item.ToString();
             DoDragDrop(strItem, DragDropEffects.Copy | DragDropEffects.Move);
         }
 
@@ -165,24 +164,27 @@ namespace SyNotebook
 
         TreeNode getTopCryptedParentNode(TreeNode node)
         {
-            if (node.Parent == null) return null;
-            Note note = (Note)node.Parent.Tag;
-            if (note == null) return node;
-            if (!note.IsCrypted || note.ID==Guid.Empty) return node;
-            return getTopCryptedParentNode(node.Parent);
+            while (true)
+            {
+                if (node.Parent == null) return null;
+                var note = (Note)node.Parent.Tag;
+                if (note == null) return node;
+                if (!note.IsCrypted || note.ID == Guid.Empty) return node;
+                node = node.Parent;
+            }
         }
-        
+
         private void tree_DragDrop(object sender, DragEventArgs e)
         {
-            TreeNode dropNode = this.tree.GetNodeAt(tree.PointToClient(new Point(e.X, e.Y)));
+            var dropNode = tree.GetNodeAt(tree.PointToClient(new Point(e.X, e.Y)));
             if (dropNode == null || dropNode == draggedNode || isNodeHasChild(draggedNode, dropNode))
             {
                 draggedNode = null;
                 return;
             }
 
-            Note draggedNote = (Note)draggedNode.Tag;
-            Note dropNote = (Note)dropNode.Tag;
+            var draggedNote = (Note)draggedNode.Tag;
+            var dropNote = (Note)dropNode.Tag;
             
             // ситуации, когда возможно просто переподкрепить узел
             if (
@@ -201,12 +203,12 @@ namespace SyNotebook
             {
                 if (!draggedNote.IsCrypted && dropNote.IsCrypted)
                 {
-                    TreeNode dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
-                    Note dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
+                    var dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
+                    var dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
                     
                     if (unlockSubTree(dropNodeTopCrypted,"¬ведите пароль"))
                     {
-						string password = dropNoteTopCrypted.Password;
+						var password = dropNoteTopCrypted.Password;
 						notebook.RemovePassword(dropNodeTopCrypted, password);
 						notebook.MoveNote(draggedNode, dropNode);
 						notebook.SetPassword(dropNodeTopCrypted,password);
@@ -235,15 +237,15 @@ namespace SyNotebook
 				if (dropNote.IsCrypted && draggedNote.IsCrypted)
 				{
 					// убеждаемс€, что цель разблокирована
-					TreeNode dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
-					Note dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
+					var dropNodeTopCrypted = getTopCryptedParentNode(dropNode);
+					var dropNoteTopCrypted = (Note)dropNodeTopCrypted.Tag;
 					if (unlockSubTree(dropNodeTopCrypted, "¬ведите пароль"))
 					{
 						if (unlockSubTree(draggedNode, "¬ведите пароль"))
 						{
 							notebook.RemovePassword(draggedNode, draggedNote.Password);
 							
-							string password = dropNoteTopCrypted.Password;
+							var password = dropNoteTopCrypted.Password;
 							notebook.RemovePassword(dropNodeTopCrypted, password);
 							notebook.MoveNote(draggedNode, dropNode);
 							notebook.SetPassword(dropNodeTopCrypted,password);
@@ -281,7 +283,7 @@ namespace SyNotebook
 
         private void tree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            TreeNode node = tree.SelectedNode;
+            var node = tree.SelectedNode;
             if (node==null) return;
 
             if (node == tree.Nodes[0])
@@ -291,7 +293,7 @@ namespace SyNotebook
             }
             else
             {
-                Note note = (Note)node.Tag;
+                var note = (Note)node.Tag;
                 
                 if (!note.IsCrypted || (note.IsCrypted && unlockSubTree(node,"¬ведите пароль доступа")))
                 {
@@ -313,10 +315,10 @@ namespace SyNotebook
 
         bool unlockSubTree(TreeNode root, string preText)
         {
-            string password = "";
+            var password = "";
             for (; ; )
             {
-                Note note = (Note)root.Tag;
+                var note = (Note)root.Tag;
                 try
                 {
                     notebook.UnlockNote(root, password);
@@ -325,7 +327,7 @@ namespace SyNotebook
                 catch (Note.BadPassword)
                 {
                     notebook.LockNote(root);
-                    PasswordForm form = new PasswordForm();
+                    var form = new PasswordForm();
                     form.labText.Text = preText + " дл€ узла \"" + note.Name + "\".";
                     if (form.ShowDialog(this) == DialogResult.Cancel) return false;
                     password = form.tbPassword.Text;
@@ -341,12 +343,12 @@ namespace SyNotebook
             }
         }
 
-        System.Drawing.Font getSelectionFont()
+        Font getSelectionFont()
         {
-            System.Drawing.Font r = rtbNoteText.SelectionFont;
+            var r = rtbNoteText.SelectionFont;
             if (r == null)
             {
-                int saveSelLen = rtbNoteText.SelectionLength;
+                var saveSelLen = rtbNoteText.SelectionLength;
                 rtbNoteText.SelectionLength = 1;
                 r = rtbNoteText.SelectionFont;
                 rtbNoteText.SelectionLength = saveSelLen;
@@ -358,15 +360,15 @@ namespace SyNotebook
         delegate void TextBlockFindedHandler();
         void enumFontBlocks(bool ignoreFontSize, TextBlockFindedHandler fontBlockFinded)
         {
-            int saveSelStart = rtbNoteText.SelectionStart;
-            int saveSelLen = rtbNoteText.SelectionLength;
+            var saveSelStart = rtbNoteText.SelectionStart;
+            var saveSelLen = rtbNoteText.SelectionLength;
 
-            int saveSelEnd = saveSelStart + saveSelLen;
+            var saveSelEnd = saveSelStart + saveSelLen;
 
             while (rtbNoteText.SelectionStart < saveSelEnd)
             {
                 rtbNoteText.SelectionLength = 1;
-                float saveFontSize = rtbNoteText.SelectionFont.Size;
+                var saveFontSize = rtbNoteText.SelectionFont.Size;
                 while (rtbNoteText.SelectionFont != null
                     && rtbNoteText.SelectionStart + rtbNoteText.SelectionLength < saveSelEnd
                     && (ignoreFontSize || rtbNoteText.SelectionFont.Size == saveFontSize)
@@ -385,8 +387,8 @@ namespace SyNotebook
         
         private void btSetTextBold_Click(object sender, EventArgs e)
         {
-            System.Drawing.Font baseFont = getSelectionFont();
-            rtbNoteText.SelectionFont = new System.Drawing.Font(
+            var baseFont = getSelectionFont();
+            rtbNoteText.SelectionFont = new Font(
                 baseFont,
                 (baseFont.Style & FontStyle.Bold) != 0 ? 
                     baseFont.Style ^ FontStyle.Bold : 
@@ -396,8 +398,8 @@ namespace SyNotebook
 
         private void btSetTextItalic_Click(object sender, EventArgs e)
         {
-            System.Drawing.Font baseFont = getSelectionFont();
-            rtbNoteText.SelectionFont = new System.Drawing.Font(
+            var baseFont = getSelectionFont();
+            rtbNoteText.SelectionFont = new Font(
                 baseFont,
                 (baseFont.Style & FontStyle.Italic) != 0 ?
                     baseFont.Style ^ FontStyle.Italic :
@@ -412,27 +414,27 @@ namespace SyNotebook
 
         void setFontProportional()
         {
-            System.Drawing.Font font = new System.Drawing.Font(proportionalFont, rtbNoteText.SelectionFont.Style);
+            var font = new Font(proportionalFont, rtbNoteText.SelectionFont.Style);
             rtbNoteText.SelectionFont = font;
         }
         private void btSetTextFontProportional_Click(object sender, EventArgs e)
         {
-            enumFontBlocks(true, new TextBlockFindedHandler(setFontProportional));
+            enumFontBlocks(true, setFontProportional);
         }
 
         void setFontMonospace()
         {
-            System.Drawing.Font font = new System.Drawing.Font(monospaceFont, rtbNoteText.SelectionFont.Style);
+            var font = new Font(monospaceFont, rtbNoteText.SelectionFont.Style);
             rtbNoteText.SelectionFont = font;
         }
         private void btSetTextFontMonospace_Click(object sender, EventArgs e)
         {
-            enumFontBlocks(true, new TextBlockFindedHandler(setFontMonospace));
+            enumFontBlocks(true, setFontMonospace);
         }
 
         void setFontSizeInc()
         {
-            rtbNoteText.SelectionFont = new System.Drawing.Font(
+            rtbNoteText.SelectionFont = new Font(
                 rtbNoteText.SelectionFont.FontFamily,
                 rtbNoteText.SelectionFont.Size+1,
                 rtbNoteText.SelectionFont.Style
@@ -440,12 +442,12 @@ namespace SyNotebook
         }
         private void btFontSizeInc_Click(object sender, EventArgs e)
         {
-            enumFontBlocks(false, new TextBlockFindedHandler(setFontSizeInc));
+            enumFontBlocks(false, setFontSizeInc);
         }
 
         void setFontSizeDec()
         {
-            rtbNoteText.SelectionFont = new System.Drawing.Font(
+            rtbNoteText.SelectionFont = new Font(
                 rtbNoteText.SelectionFont.FontFamily,
                 Math.Max(rtbNoteText.SelectionFont.Size-1, 4),
                 rtbNoteText.SelectionFont.Style
@@ -453,7 +455,7 @@ namespace SyNotebook
         }
         private void btFontSizeDec_Click(object sender, EventArgs e)
         {
-            enumFontBlocks(false, new TextBlockFindedHandler(setFontSizeDec));
+            enumFontBlocks(false, setFontSizeDec);
         }
 
         private void MainForm_Move(object sender, EventArgs e)
@@ -487,7 +489,7 @@ namespace SyNotebook
 
 		public void SaveGlobalParam()
 		{
-            System.Xml.XmlTextWriter w = new System.Xml.XmlTextWriter(pathToIniFile, System.Text.Encoding.Default);
+            var w = new System.Xml.XmlTextWriter(pathToIniFile, Encoding.Default);
 			w.Formatting = System.Xml.Formatting.Indented;
 			w.Indentation = 1;
 			w.IndentChar = '\t';
@@ -496,11 +498,11 @@ namespace SyNotebook
 					w.WriteStartElement("Fonts");
 						w.WriteStartElement("Proportional");
 							w.WriteAttributeString("FamilyName",proportionalFont.FontFamily.Name);
-							w.WriteAttributeString("Size",proportionalFont.Size.ToString());
+							w.WriteAttributeString("Size",proportionalFont.Size.ToString(CultureInfo.InvariantCulture));
 						w.WriteEndElement();
 						w.WriteStartElement("Monospace");
 							w.WriteAttributeString("FamilyName",monospaceFont.FontFamily.Name);
-							w.WriteAttributeString("Size",monospaceFont.Size.ToString());
+							w.WriteAttributeString("Size",monospaceFont.Size.ToString(CultureInfo.InvariantCulture));
 						w.WriteEndElement();
 					w.WriteEndElement();
 					w.WriteStartElement("WindowPos");
@@ -516,11 +518,11 @@ namespace SyNotebook
 			w.Close();
 		}
 		
-        public void LoadGlobalParam()
+        void LoadGlobalParam()
 		{
             if (!System.IO.File.Exists(pathToIniFile)) return;
 
-			System.Xml.XmlDocument xml = new System.Xml.XmlDocument();
+			var xml = new System.Xml.XmlDocument();
             xml.Load(pathToIniFile);
 			
 			try
@@ -551,7 +553,7 @@ namespace SyNotebook
 
         private void tree_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            e.CancelEdit = e.Node==tree.Nodes[0];
+            e.CancelEdit = e.Node == tree.Nodes[0];
         }
 
         private void miAddItem_Click(object sender, EventArgs e)
@@ -576,21 +578,24 @@ namespace SyNotebook
 
         bool isNodeHasCryptedParents(TreeNode node)
         {
-            if (node==null || node.Parent == null) return false;
-            Note note = (Note)node.Parent.Tag;
-            if (note == null) return false;
-            if (note.IsCrypted) return true;
-            return isNodeHasCryptedParents(node.Parent);
+            while (true)
+            {
+                if (node?.Parent == null) return false;
+                var note = (Note)node.Parent.Tag;
+                if (note == null) return false;
+                if (note.IsCrypted) return true;
+                node = node.Parent;
+            }
         }
-        
+
         private void btSetPassword_Click(object sender, EventArgs e)
         {
-            if (tree.SelectedNode != null && tree.SelectedNode!=tree.Nodes[0])
+            if (tree.SelectedNode != null && tree.SelectedNode != tree.Nodes[0])
             {
-                TreeNode node = getTopCryptedParentNode(tree.SelectedNode);
+                var node = getTopCryptedParentNode(tree.SelectedNode);
                 if (node == null) return;
                 
-                if (node!=tree.SelectedNode)
+                if (node != tree.SelectedNode)
                 {
 					if (
 						MessageBox.Show(
@@ -603,9 +608,9 @@ namespace SyNotebook
 
                 if (unlockSubTree(tree.SelectedNode,"¬ведите старый пароль"))
                 {
-	                Note note = (Note)node.Tag;
+	                var note = (Note)node.Tag;
 					notebook.RemovePassword(node, note.Password);
-					PasswordNewForm form2 = new PasswordNewForm();
+					var form2 = new PasswordNewForm();
 					form2.labText.Text = "¬ведите новый пароль дл€ узла \"" + note.Name + "\"";
 					if (form2.ShowDialog(this) == DialogResult.Cancel) return;
 					notebook.SetPassword(node, form2.tbPassword.Text);
@@ -618,7 +623,7 @@ namespace SyNotebook
         {
             if (tree.SelectedNode != null)
             {
-                TreeNode node = getTopCryptedParentNode(tree.SelectedNode);
+                var node = getTopCryptedParentNode(tree.SelectedNode);
                 if (node == null) return;
                 
                 if (node!=tree.SelectedNode)
@@ -641,7 +646,7 @@ namespace SyNotebook
 
         private void tree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            Note note = (Note)e.Node.Tag;
+            var note = (Note)e.Node.Tag;
             if (note == null) return;
 
             if (note.IsCrypted)
@@ -673,15 +678,15 @@ namespace SyNotebook
         {
             if (tree.SelectedNode == null) return;
 
-            Note note = (Note)tree.SelectedNode.Tag;
+            var note = (Note)tree.SelectedNode.Tag;
             
-            if (note.ID==Guid.Empty)
+            if (note.ID == Guid.Empty)
             {
             	tree.SelectedNode.Expand();
             	return;
             }
             
-            NoteForm form = new NoteForm(baseImageList);
+            var form = new NoteForm(baseImageList);
             form.tbBookmarkName.Text = note.Name;
             form.ImageIndex = note.ImageIndex;
             if (form.ShowDialog(this) == DialogResult.OK)
@@ -692,11 +697,11 @@ namespace SyNotebook
 
 		private void btChangeParam_Click(object sender, EventArgs e)
 		{
-			ParamForm form = new ParamForm();
+			var form = new ParamForm();
 			form.propFontDialog.Font = proportionalFont;
 			form.monoFontDialog.Font = monospaceFont;
 			
-			if (form.ShowDialog(this)==DialogResult.OK)
+			if (form.ShowDialog(this) == DialogResult.OK)
 			{
 				proportionalFont = form.propFontDialog.Font;
 				monospaceFont = form.monoFontDialog.Font;
@@ -717,9 +722,9 @@ namespace SyNotebook
                 while (n >= 0)
                 {
                     var s = rtbNoteText.Text.Substring(n);
-                    if (s.StartsWith("http://") || s.StartsWith("https://"))
+                    if (s.StartsWith("http://") || s.StartsWith("https://") || s.StartsWith("ftp://"))
                     {
-                        var m = Regex.Match(s, @"^[^ \t(),.!\r\n""']+");
+                        var m = Regex.Match(s, @"^[^ \t(),!\r\n""']+");
                         if (m.Success && n + m.Length >= start)  Clipboard.SetText(m.Value);
                         else break;
                     }
@@ -744,8 +749,8 @@ namespace SyNotebook
 
 		private void btSetTextUnderline_Click(object sender, EventArgs e)
 		{
-            System.Drawing.Font baseFont = getSelectionFont();
-            rtbNoteText.SelectionFont = new System.Drawing.Font(
+            var baseFont = getSelectionFont();
+            rtbNoteText.SelectionFont = new Font(
                 baseFont,
                 (baseFont.Style & FontStyle.Underline) != 0 ? 
                     baseFont.Style ^ FontStyle.Underline : 
@@ -771,12 +776,12 @@ namespace SyNotebook
 
         private void miLock_Click(object sender, EventArgs e)
         {
-            if (tree.SelectedNode != null && tree.SelectedNode!=tree.Nodes[0])
+            if (tree.SelectedNode != null && tree.SelectedNode != tree.Nodes[0])
             {
-                Note selectedNote = (Note)tree.SelectedNode.Tag;
+                var selectedNote = (Note)tree.SelectedNode.Tag;
                 if (!selectedNote.IsCrypted || selectedNote.IsLocked) return;
                 
-                TreeNode node = getTopCryptedParentNode(tree.SelectedNode);
+                var node = getTopCryptedParentNode(tree.SelectedNode);
                 if (node == null) return;
 
                 if (node != tree.SelectedNode)

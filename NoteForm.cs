@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SyNotebook
@@ -16,12 +13,12 @@ namespace SyNotebook
         {
             InitializeComponent();
             
-            for (int i=0;i<imageList.Images.Count;i++)
+            for (var i=0;i<imageList.Images.Count;i++)
             {
-				int y = i/8;
-				int x = i%8;
+				var y = i/8;
+				var x = i%8;
 				
-				RadioButton cb = new RadioButton();
+				var cb = new RadioButton();
 				cb.Appearance = Appearance.Button;
 				cb.FlatStyle = FlatStyle.Flat;
 				cb.FlatAppearance.CheckedBackColor = Color.White;
@@ -33,7 +30,7 @@ namespace SyNotebook
 				cb.Height = 25;
 				
 				imageButtons.Add(cb);
-				this.Controls.Add(cb);
+				Controls.Add(cb);
             }
         }
 
@@ -41,7 +38,7 @@ namespace SyNotebook
         {
             get
             {
-                for (int i=0;i<imageButtons.Count;i++)
+                for (var i=0;i<imageButtons.Count;i++)
                 {
                     if (imageButtons[i].Checked) return i;
                 }
