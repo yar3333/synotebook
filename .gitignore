@@ -2,3 +2,4 @@
 bin/
 obj/
 SyNotebook.csproj.user
+release-x64/
