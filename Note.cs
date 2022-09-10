@@ -229,19 +229,20 @@ public class Note
 
     private static void writeString(Stream fout, string s)
     {
-        var buf = Encoding.Default.GetBytes(s);
-        var size = buf.Length;
-        writeInt(fout, size);
+        var buf = Encoding.UTF8.GetBytes(s);
+        writeInt(fout, buf.Length + 1);
+        fout.WriteByte(0);
         fout.Write(buf, 0, buf.Length);
     }
 
     private static string readString(Stream finp)
     {
-        var size = readInt(finp); if (size==0) return "";
+        var size = readInt(finp); if (size == 0) return "";
         var buf = new byte[size];
         // ReSharper disable once MustUseReturnValue
         finp.Read(buf, 0, buf.Length);
-        return Encoding.Default.GetString(buf);
+        return buf[0] == '0' ? Encoding.UTF8.GetString(buf, 1, buf.Length - 1) 
+                             : Encoding.GetEncoding(1251).GetString(buf);
     }
 
     private void readFlags(Stream finp)
