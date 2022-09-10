@@ -80,10 +80,11 @@ namespace SyNotebook
             // 
             // btSetTextFontMonospace
             // 
-            this.btSetTextFontMonospace.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btSetTextFontMonospace.Location = new System.Drawing.Point(207, 12);
+            this.btSetTextFontMonospace.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btSetTextFontMonospace.Location = new System.Drawing.Point(241, 14);
+            this.btSetTextFontMonospace.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextFontMonospace.Name = "btSetTextFontMonospace";
-            this.btSetTextFontMonospace.Size = new System.Drawing.Size(48, 23);
+            this.btSetTextFontMonospace.Size = new System.Drawing.Size(56, 27);
             this.btSetTextFontMonospace.TabIndex = 2;
             this.btSetTextFontMonospace.Text = "моно";
             toolTip.SetToolTip(this.btSetTextFontMonospace, "Моноширинный шрифт");
@@ -92,10 +93,11 @@ namespace SyNotebook
             // 
             // btSetTextFontProportional
             // 
-            this.btSetTextFontProportional.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btSetTextFontProportional.Location = new System.Drawing.Point(162, 12);
+            this.btSetTextFontProportional.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btSetTextFontProportional.Location = new System.Drawing.Point(189, 14);
+            this.btSetTextFontProportional.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextFontProportional.Name = "btSetTextFontProportional";
-            this.btSetTextFontProportional.Size = new System.Drawing.Size(44, 23);
+            this.btSetTextFontProportional.Size = new System.Drawing.Size(51, 27);
             this.btSetTextFontProportional.TabIndex = 2;
             this.btSetTextFontProportional.Text = "проп";
             toolTip.SetToolTip(this.btSetTextFontProportional, "Пропорциональный шрифт");
@@ -104,10 +106,11 @@ namespace SyNotebook
             // 
             // btFontSizeInc
             // 
-            this.btFontSizeInc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btFontSizeInc.Location = new System.Drawing.Point(99, 12);
+            this.btFontSizeInc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btFontSizeInc.Location = new System.Drawing.Point(115, 14);
+            this.btFontSizeInc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btFontSizeInc.Name = "btFontSizeInc";
-            this.btFontSizeInc.Size = new System.Drawing.Size(26, 23);
+            this.btFontSizeInc.Size = new System.Drawing.Size(30, 27);
             this.btFontSizeInc.TabIndex = 12;
             this.btFontSizeInc.Text = "+";
             toolTip.SetToolTip(this.btFontSizeInc, "Увеличить шрифт");
@@ -116,10 +119,11 @@ namespace SyNotebook
             // 
             // btFontSizeDec
             // 
-            this.btFontSizeDec.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btFontSizeDec.Location = new System.Drawing.Point(126, 12);
+            this.btFontSizeDec.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btFontSizeDec.Location = new System.Drawing.Point(147, 14);
+            this.btFontSizeDec.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btFontSizeDec.Name = "btFontSizeDec";
-            this.btFontSizeDec.Size = new System.Drawing.Size(26, 23);
+            this.btFontSizeDec.Size = new System.Drawing.Size(30, 27);
             this.btFontSizeDec.TabIndex = 12;
             this.btFontSizeDec.Text = "-";
             toolTip.SetToolTip(this.btFontSizeDec, "Уменьщить шрифт");
@@ -129,9 +133,10 @@ namespace SyNotebook
             // btDeleteBookmark
             // 
             this.btDeleteBookmark.Image = global::SyNotebook.Properties.Resources.imgDeleteItem;
-            this.btDeleteBookmark.Location = new System.Drawing.Point(39, 10);
+            this.btDeleteBookmark.Location = new System.Drawing.Point(46, 12);
+            this.btDeleteBookmark.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btDeleteBookmark.Name = "btDeleteBookmark";
-            this.btDeleteBookmark.Size = new System.Drawing.Size(30, 25);
+            this.btDeleteBookmark.Size = new System.Drawing.Size(35, 29);
             this.btDeleteBookmark.TabIndex = 3;
             toolTip.SetToolTip(this.btDeleteBookmark, "Удалить элемент");
             this.btDeleteBookmark.UseVisualStyleBackColor = true;
@@ -140,9 +145,10 @@ namespace SyNotebook
             // btChangeParam
             // 
             this.btChangeParam.Image = global::SyNotebook.Properties.Resources.imgChangeParam;
-            this.btChangeParam.Location = new System.Drawing.Point(144, 10);
+            this.btChangeParam.Location = new System.Drawing.Point(168, 12);
+            this.btChangeParam.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btChangeParam.Name = "btChangeParam";
-            this.btChangeParam.Size = new System.Drawing.Size(27, 25);
+            this.btChangeParam.Size = new System.Drawing.Size(31, 29);
             this.btChangeParam.TabIndex = 2;
             toolTip.SetToolTip(this.btChangeParam, "Настройка");
             this.btChangeParam.UseVisualStyleBackColor = true;
@@ -151,9 +157,10 @@ namespace SyNotebook
             // btRemovePassword
             // 
             this.btRemovePassword.Image = global::SyNotebook.Properties.Resources.imgRemovePassword;
-            this.btRemovePassword.Location = new System.Drawing.Point(108, 10);
+            this.btRemovePassword.Location = new System.Drawing.Point(126, 12);
+            this.btRemovePassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btRemovePassword.Name = "btRemovePassword";
-            this.btRemovePassword.Size = new System.Drawing.Size(27, 25);
+            this.btRemovePassword.Size = new System.Drawing.Size(31, 29);
             this.btRemovePassword.TabIndex = 2;
             toolTip.SetToolTip(this.btRemovePassword, "Выключить шифрование раздела");
             this.btRemovePassword.UseVisualStyleBackColor = true;
@@ -162,9 +169,10 @@ namespace SyNotebook
             // btSetPassword
             // 
             this.btSetPassword.Image = global::SyNotebook.Properties.Resources.imgSetPassword;
-            this.btSetPassword.Location = new System.Drawing.Point(78, 10);
+            this.btSetPassword.Location = new System.Drawing.Point(91, 12);
+            this.btSetPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetPassword.Name = "btSetPassword";
-            this.btSetPassword.Size = new System.Drawing.Size(27, 25);
+            this.btSetPassword.Size = new System.Drawing.Size(31, 29);
             this.btSetPassword.TabIndex = 2;
             toolTip.SetToolTip(this.btSetPassword, "Включить шифрование раздела");
             this.btSetPassword.UseVisualStyleBackColor = true;
@@ -173,9 +181,10 @@ namespace SyNotebook
             // btAddBookmark
             // 
             this.btAddBookmark.Image = global::SyNotebook.Properties.Resources.imgNewItem;
-            this.btAddBookmark.Location = new System.Drawing.Point(9, 10);
+            this.btAddBookmark.Location = new System.Drawing.Point(10, 12);
+            this.btAddBookmark.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btAddBookmark.Name = "btAddBookmark";
-            this.btAddBookmark.Size = new System.Drawing.Size(27, 25);
+            this.btAddBookmark.Size = new System.Drawing.Size(31, 29);
             this.btAddBookmark.TabIndex = 2;
             toolTip.SetToolTip(this.btAddBookmark, "Создать элемент");
             this.btAddBookmark.UseVisualStyleBackColor = true;
@@ -183,11 +192,12 @@ namespace SyNotebook
             // 
             // btSetTextUnderline
             // 
-            this.btSetTextUnderline.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetTextUnderline.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.btSetTextUnderline.Image = global::SyNotebook.Properties.Resources.imgUnderline;
-            this.btSetTextUnderline.Location = new System.Drawing.Point(62, 12);
+            this.btSetTextUnderline.Location = new System.Drawing.Point(72, 14);
+            this.btSetTextUnderline.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextUnderline.Name = "btSetTextUnderline";
-            this.btSetTextUnderline.Size = new System.Drawing.Size(26, 23);
+            this.btSetTextUnderline.Size = new System.Drawing.Size(30, 27);
             this.btSetTextUnderline.TabIndex = 2;
             toolTip.SetToolTip(this.btSetTextUnderline, "Подчёркнутый");
             this.btSetTextUnderline.UseVisualStyleBackColor = true;
@@ -195,11 +205,12 @@ namespace SyNotebook
             // 
             // btSetTextItalic
             // 
-            this.btSetTextItalic.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetTextItalic.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.btSetTextItalic.Image = global::SyNotebook.Properties.Resources.imgItalic;
-            this.btSetTextItalic.Location = new System.Drawing.Point(35, 12);
+            this.btSetTextItalic.Location = new System.Drawing.Point(41, 14);
+            this.btSetTextItalic.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextItalic.Name = "btSetTextItalic";
-            this.btSetTextItalic.Size = new System.Drawing.Size(26, 23);
+            this.btSetTextItalic.Size = new System.Drawing.Size(30, 27);
             this.btSetTextItalic.TabIndex = 2;
             toolTip.SetToolTip(this.btSetTextItalic, "Курсив");
             this.btSetTextItalic.UseVisualStyleBackColor = true;
@@ -207,11 +218,12 @@ namespace SyNotebook
             // 
             // btSetTextBold
             // 
-            this.btSetTextBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btSetTextBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btSetTextBold.Image = global::SyNotebook.Properties.Resources.imgBold;
-            this.btSetTextBold.Location = new System.Drawing.Point(8, 12);
+            this.btSetTextBold.Location = new System.Drawing.Point(9, 14);
+            this.btSetTextBold.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextBold.Name = "btSetTextBold";
-            this.btSetTextBold.Size = new System.Drawing.Size(26, 23);
+            this.btSetTextBold.Size = new System.Drawing.Size(30, 27);
             this.btSetTextBold.TabIndex = 2;
             toolTip.SetToolTip(this.btSetTextBold, "Жирный");
             this.btSetTextBold.UseVisualStyleBackColor = true;
@@ -219,11 +231,12 @@ namespace SyNotebook
             // 
             // btUndentDec
             // 
-            this.btUndentDec.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btUndentDec.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btUndentDec.Image = global::SyNotebook.Properties.Resources.imgIndentDec;
-            this.btUndentDec.Location = new System.Drawing.Point(264, 12);
+            this.btUndentDec.Location = new System.Drawing.Point(308, 14);
+            this.btUndentDec.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btUndentDec.Name = "btUndentDec";
-            this.btUndentDec.Size = new System.Drawing.Size(26, 23);
+            this.btUndentDec.Size = new System.Drawing.Size(30, 27);
             this.btUndentDec.TabIndex = 12;
             toolTip.SetToolTip(this.btUndentDec, "Уменьшить отступ");
             this.btUndentDec.UseVisualStyleBackColor = true;
@@ -231,11 +244,12 @@ namespace SyNotebook
             // 
             // btIndentInc
             // 
-            this.btIndentInc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btIndentInc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btIndentInc.Image = global::SyNotebook.Properties.Resources.imgIndentInc;
-            this.btIndentInc.Location = new System.Drawing.Point(291, 12);
+            this.btIndentInc.Location = new System.Drawing.Point(340, 14);
+            this.btIndentInc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btIndentInc.Name = "btIndentInc";
-            this.btIndentInc.Size = new System.Drawing.Size(26, 23);
+            this.btIndentInc.Size = new System.Drawing.Size(30, 27);
             this.btIndentInc.TabIndex = 12;
             toolTip.SetToolTip(this.btIndentInc, "Увеличить отступ");
             this.btIndentInc.UseVisualStyleBackColor = true;
@@ -248,10 +262,11 @@ namespace SyNotebook
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tree.ContextMenuStrip = this.treeMenu;
-            this.tree.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tree.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tree.HideSelection = false;
             this.tree.LabelEdit = true;
-            this.tree.Location = new System.Drawing.Point(0, 41);
+            this.tree.Location = new System.Drawing.Point(0, 47);
+            this.tree.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tree.Name = "tree";
             treeNode1.Name = "Root";
             treeNode1.Text = "Заметки";
@@ -260,7 +275,7 @@ namespace SyNotebook
             treeNode1});
             this.tree.ShowNodeToolTips = true;
             this.tree.ShowRootLines = false;
-            this.tree.Size = new System.Drawing.Size(193, 314);
+            this.tree.Size = new System.Drawing.Size(199, 366);
             this.tree.TabIndex = 0;
             this.tree.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tree_BeforeLabelEdit);
             this.tree.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.tree_AfterLabelEdit);
@@ -284,7 +299,7 @@ namespace SyNotebook
             this.miSeparator2,
             this.miProperties});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(215, 170);
+            this.treeMenu.Size = new System.Drawing.Size(215, 148);
             this.treeMenu.Opening += new System.ComponentModel.CancelEventHandler(this.treeMenu_Opening);
             // 
             // miAddItem
@@ -352,11 +367,12 @@ namespace SyNotebook
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbNoteText.ContextMenuStrip = this.textMenu;
-            this.rtbNoteText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.rtbNoteText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rtbNoteText.HideSelection = false;
-            this.rtbNoteText.Location = new System.Drawing.Point(1, 41);
+            this.rtbNoteText.Location = new System.Drawing.Point(1, 47);
+            this.rtbNoteText.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.rtbNoteText.Name = "rtbNoteText";
-            this.rtbNoteText.Size = new System.Drawing.Size(507, 314);
+            this.rtbNoteText.Size = new System.Drawing.Size(632, 366);
             this.rtbNoteText.TabIndex = 1;
             this.rtbNoteText.Text = "";
             this.rtbNoteText.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbNoteText_LinkClicked);
@@ -402,6 +418,7 @@ namespace SyNotebook
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -431,7 +448,7 @@ namespace SyNotebook
             this.splitContainer1.Panel2.Controls.Add(this.btSetTextItalic);
             this.splitContainer1.Panel2.Controls.Add(this.btSetTextBold);
             this.splitContainer1.Panel2.Controls.Add(this.rtbNoteText);
-            this.splitContainer1.Size = new System.Drawing.Size(707, 358);
+            this.splitContainer1.Size = new System.Drawing.Size(825, 413);
             this.splitContainer1.SplitterDistance = 196;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 5;
@@ -441,9 +458,10 @@ namespace SyNotebook
             this.btSetTextColor8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor8.BackColor = System.Drawing.Color.Gray;
             this.btSetTextColor8.ForeColor = System.Drawing.Color.Gray;
-            this.btSetTextColor8.Location = new System.Drawing.Point(420, 12);
+            this.btSetTextColor8.Location = new System.Drawing.Point(531, 14);
+            this.btSetTextColor8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor8.Name = "btSetTextColor8";
-            this.btSetTextColor8.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor8.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor8.TabIndex = 9;
             this.btSetTextColor8.UseVisualStyleBackColor = false;
             this.btSetTextColor8.Click += new System.EventHandler(this.btSetTextColor_Click);
@@ -453,9 +471,10 @@ namespace SyNotebook
             this.btSetTextColor9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btSetTextColor9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btSetTextColor9.Location = new System.Drawing.Point(366, 12);
+            this.btSetTextColor9.Location = new System.Drawing.Point(468, 14);
+            this.btSetTextColor9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor9.Name = "btSetTextColor9";
-            this.btSetTextColor9.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor9.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor9.TabIndex = 4;
             this.btSetTextColor9.UseVisualStyleBackColor = false;
             this.btSetTextColor9.Click += new System.EventHandler(this.btSetTextColor_Click);
@@ -465,9 +484,10 @@ namespace SyNotebook
             this.btSetTextColor14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.btSetTextColor14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btSetTextColor14.Location = new System.Drawing.Point(393, 12);
+            this.btSetTextColor14.Location = new System.Drawing.Point(500, 14);
+            this.btSetTextColor14.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor14.Name = "btSetTextColor14";
-            this.btSetTextColor14.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor14.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor14.TabIndex = 6;
             this.btSetTextColor14.UseVisualStyleBackColor = false;
             this.btSetTextColor14.Click += new System.EventHandler(this.btSetTextColor_Click);
@@ -476,9 +496,10 @@ namespace SyNotebook
             // 
             this.btSetTextColor0.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor0.BackColor = System.Drawing.Color.Black;
-            this.btSetTextColor0.Location = new System.Drawing.Point(339, 12);
+            this.btSetTextColor0.Location = new System.Drawing.Point(437, 14);
+            this.btSetTextColor0.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor0.Name = "btSetTextColor0";
-            this.btSetTextColor0.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor0.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor0.TabIndex = 3;
             this.btSetTextColor0.UseVisualStyleBackColor = false;
             this.btSetTextColor0.Click += new System.EventHandler(this.btSetTextColor_Click);
@@ -488,9 +509,10 @@ namespace SyNotebook
             this.btSetTextColor3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor3.BackColor = System.Drawing.Color.Olive;
             this.btSetTextColor3.ForeColor = System.Drawing.Color.Olive;
-            this.btSetTextColor3.Location = new System.Drawing.Point(447, 12);
+            this.btSetTextColor3.Location = new System.Drawing.Point(563, 14);
+            this.btSetTextColor3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor3.Name = "btSetTextColor3";
-            this.btSetTextColor3.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor3.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor3.TabIndex = 3;
             this.btSetTextColor3.UseVisualStyleBackColor = false;
             this.btSetTextColor3.Click += new System.EventHandler(this.btSetTextColor_Click);
@@ -500,15 +522,17 @@ namespace SyNotebook
             this.btSetTextColor4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor4.BackColor = System.Drawing.Color.Green;
             this.btSetTextColor4.ForeColor = System.Drawing.Color.Green;
-            this.btSetTextColor4.Location = new System.Drawing.Point(474, 12);
+            this.btSetTextColor4.Location = new System.Drawing.Point(594, 14);
+            this.btSetTextColor4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btSetTextColor4.Name = "btSetTextColor4";
-            this.btSetTextColor4.Size = new System.Drawing.Size(28, 23);
+            this.btSetTextColor4.Size = new System.Drawing.Size(33, 27);
             this.btSetTextColor4.TabIndex = 3;
             this.btSetTextColor4.UseVisualStyleBackColor = false;
             this.btSetTextColor4.Click += new System.EventHandler(this.btSetTextColor_Click);
             // 
             // baseImageList
             // 
+            this.baseImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.baseImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("baseImageList.ImageStream")));
             this.baseImageList.TransparentColor = System.Drawing.Color.White;
             this.baseImageList.Images.SetKeyName(0, "imgPic0.png");
@@ -522,12 +546,13 @@ namespace SyNotebook
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(707, 358);
+            this.ClientSize = new System.Drawing.Size(825, 413);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MainForm";
             this.Text = "SyNotebook";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

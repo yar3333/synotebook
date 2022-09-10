@@ -1,12 +1,11 @@
 using System.Windows.Forms;
 
-namespace SyNotebook
+namespace SyNotebook;
+
+public partial class PasswordForm : Form
 {
-    public partial class PasswordForm : Form
+    public PasswordForm()
     {
-        public PasswordForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
