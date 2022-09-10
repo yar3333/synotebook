@@ -1,5 +1,3 @@
-using System;
-
 namespace SyNotebook.Crypting;
 
 /// <summary>
@@ -11,19 +9,6 @@ public class IdeaCFB
     private byte[] decIV;
 
     private ushort[] encKey = new ushort[52];
-		
-    /// <summary>
-    /// Инициализирует поток для шифрования.
-    /// </summary>
-    /// <param name="IV">вектор инициализации (8 элементов)</param>
-    /// <param name="key">ключ (8 элементов)</param>
-    private IdeaCFB(byte[] IV, ushort[] key)
-    {
-        encIV = (byte[])IV.Clone();
-        decIV = (byte[])IV.Clone();
-
-        IdeaBase.makeEncryptKey(encKey,key);
-    }
 
     public IdeaCFB(string password)
     {

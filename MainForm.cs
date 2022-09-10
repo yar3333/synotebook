@@ -490,7 +490,7 @@ public partial class MainForm : Form
 
     private void SaveGlobalParam()
     {
-        var w = new System.Xml.XmlTextWriter(pathToIniFile, Encoding.Default);
+        var w = new System.Xml.XmlTextWriter(pathToIniFile, null);
         w.Formatting = System.Xml.Formatting.Indented;
         w.Indentation = 1;
         w.IndentChar = '\t';

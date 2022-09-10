@@ -383,13 +383,7 @@ public class Note
     private static uint GetTextCrc(string s)
     {
         uint r = 0;
-
-        var buf = Encoding.Default.GetBytes(s);
-        foreach (var b in buf)
-        {
-            unchecked { r += b; }
-        }
-
+        foreach (var b in Encoding.ASCII.GetBytes(s)) unchecked { r += b; }
         return r;
     }
 
