@@ -241,8 +241,8 @@ public class Note
         var buf = new byte[size];
         // ReSharper disable once MustUseReturnValue
         finp.Read(buf, 0, buf.Length);
-        return buf[0] == '0' ? Encoding.UTF8.GetString(buf, 1, buf.Length - 1) 
-                             : Encoding.GetEncoding(1251).GetString(buf);
+        return buf[0] == '\0' ? Encoding.UTF8.GetString(buf, 1, buf.Length - 1) 
+                              : Encoding.GetEncoding(1251).GetString(buf);
     }
 
     private void readFlags(Stream finp)
