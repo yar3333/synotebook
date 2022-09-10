@@ -7,7 +7,7 @@ namespace SyNotebook
 {
     public partial class NoteForm : Form
     {
-	    List<RadioButton> imageButtons = new List<RadioButton>();
+        private List<RadioButton> imageButtons = new List<RadioButton>();
 
         public NoteForm(ImageList imageList)
         {

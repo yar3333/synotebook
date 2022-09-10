@@ -5,25 +5,25 @@ using System.Windows.Forms;
 
 namespace SyNotebook
 {
-    class Notebook
+    internal class Notebook
     {
-        enum Images
+        private enum Images
         {
             Uncrypted,
             Locked,
             UnLocked
         }
 
-        Dictionary<Guid, Note> notes = new Dictionary<Guid, Note>(10);
+        private readonly Dictionary<Guid, Note> notes = new Dictionary<Guid, Note>(10);
 
-        string pathToDataFolder;
+        private readonly string pathToDataFolder;
 
-        List<Note> getNotesByParentID(Guid parentID)
+        private List<Note> GetNotesByParentId(Guid parentId)
         {
             var r = new List<Note>();
-            foreach (var noteID in notes.Keys)
+            foreach (var noteId in notes.Keys)
             {
-                if (notes[noteID].ParentID == parentID) r.Add(notes[noteID]);
+                if (notes[noteId].ParentId == parentId) r.Add(notes[noteId]);
             }
 
             r.Sort(new NotePositionComparer());
@@ -31,7 +31,7 @@ namespace SyNotebook
             return r;
         }
 
-        class NotePositionComparer : IComparer<Note>
+        private class NotePositionComparer : IComparer<Note>
         {
             public int Compare(Note x, Note y)
             {
@@ -40,29 +40,17 @@ namespace SyNotebook
                 return 0;
             }
         }
-        
-        class NoteLastTextAccessDateComparer : IComparer<Note>
-        {
-            public int Compare(Note x, Note y)
-            {
-                if (x.LastTextAccessDate < y.LastTextAccessDate) return -1;
-                if (x.LastTextAccessDate > y.LastTextAccessDate) return +1;
-                return 0;
-            }
-        }
 
-        int imageListLength;
-        
-        class NoteFile : IComparable<NoteFile>
+        private readonly int imageListLength;
+
+        private class NoteFile : IComparable<NoteFile>
         {
-        	string fileName;
-        	public string FileName { get { return fileName; } }
-        	DateTime date;
-        	public DateTime Date { get { return date; } }
-        	
-        	public NoteFile(string fileName,DateTime date)
+            public readonly string FileName;
+            private readonly DateTime date;
+
+            public NoteFile(string fileName,DateTime date)
         	{
-        		this.fileName = fileName;
+        		this.FileName = fileName;
         		this.date = date;
         	}
         	
@@ -86,24 +74,25 @@ namespace SyNotebook
             }
             noteFiles.Sort();
             
-            for (var i=noteFiles.Count-1;i>=0;i--)
+            for (var i = noteFiles.Count - 1; i >= 0; i--)
             {
             	var note = new Note(pathToDataFolder, noteFiles[i].FileName);
-                notes.Add(note.ID, note);
+                notes.Add(note.Id, note);
             }
             
             NotesAsyncLoader.Start();
         }
 
+        // ReSharper disable once ParameterHidesMember
         public void Save(string pathToDataFolder)
         {
             NotesAsyncLoader.Abort();
             GC.Collect();
             GC.WaitForPendingFinalizers();
         	
-        	foreach (var noteID in notes.Keys)
+        	foreach (var noteId in notes.Keys)
             {
-	            var note = notes[noteID];
+	            var note = notes[noteId];
             	
             	try
 	            {
@@ -129,14 +118,16 @@ namespace SyNotebook
             if (root==null)
             {
                 tree.Nodes.Clear();
-                root = new TreeNode();
-                root.Text = "Заметки";
-                root.Tag = new Note(Guid.Empty,Guid.Empty,"Заметки",null, 0, 0, pathToDataFolder);
+                root = new TreeNode
+                {
+                    Text = "Заметки",
+                    Tag = new Note(Guid.Empty,Guid.Empty,"Заметки",null, 0, 0, pathToDataFolder)
+                };
                 tree.Nodes.Add(root);
                 root.Expand();
             }
 
-            var childNotes = getNotesByParentID(((Note)root.Tag).ID);
+            var childNotes = GetNotesByParentId(((Note)root.Tag).Id);
             foreach (var note in childNotes)
             {
                 var node = new TreeNode();
@@ -151,9 +142,10 @@ namespace SyNotebook
             }
         }
 
-        void updateNodeImage(TreeNode node)
+        private void updateNodeImage(TreeNode node)
         {
             var note = (Note)node.Tag;
+            // ReSharper disable once UselessBinaryOperation
             if (!note.IsCrypted) node.ImageIndex = (int)Images.Uncrypted * imageListLength + note.ImageIndex;
             else node.ImageIndex = (note.IsLocked ? (int)Images.Locked : (int)Images.UnLocked) * imageListLength + note.ImageIndex;
             node.SelectedImageIndex = node.ImageIndex;
@@ -161,11 +153,13 @@ namespace SyNotebook
         
         public TreeNode AddNote(TreeNode root, string name, int imageIndex)
         {
-            var note = new Note(Guid.NewGuid(), ((Note)root.Tag).ID, name, "", root.Nodes.Count, imageIndex, pathToDataFolder);
-            notes.Add(note.ID, note);
+            var note = new Note(Guid.NewGuid(), ((Note)root.Tag).Id, name, "", root.Nodes.Count, imageIndex, pathToDataFolder);
+            notes.Add(note.Id, note);
 
-            var node = new TreeNode(note.Name);
-            node.Tag = note;
+            var node = new TreeNode(note.Name)
+            {
+                Tag = note
+            };
             root.Nodes.Add(node);
 
             updateNodeImage(node);
@@ -184,18 +178,18 @@ namespace SyNotebook
 
         public void MoveNote(TreeNode node, TreeNode newParentNode)
         {
-            ((Note)node.Tag).ParentID = ((Note)newParentNode.Tag).ID;
+            ((Note)node.Tag).ParentId = ((Note)newParentNode.Tag).Id;
             ((Note)node.Tag).Position = newParentNode.Nodes.Count;
 
             node.Parent.Nodes.Remove(node);
             newParentNode.Nodes.Add(node);
         }
 
-        void DeleteNote(Note note)
+        private void DeleteNote(Note note)
         {
-            var childs = getNotesByParentID(note.ID);
+            var childs = GetNotesByParentId(note.Id);
             foreach (var child in childs) DeleteNote(child);
-            notes.Remove(note.ID);
+            notes.Remove(note.Id);
             note.Delete();
         }
 
@@ -246,7 +240,7 @@ namespace SyNotebook
             setPassword(node,password,true);
         }
 
-        void setPassword(TreeNode node, string password, bool isTopLevelCryptedItem)
+        private void setPassword(TreeNode node, string password, bool isTopLevelCryptedItem)
         {
             var note = (Note)node.Tag;
             note.SetPassword(password, isTopLevelCryptedItem);

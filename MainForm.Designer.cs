@@ -50,11 +50,11 @@ namespace SyNotebook
             this.treeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.miAddItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miDeleteItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.miSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.miSetPassword = new System.Windows.Forms.ToolStripMenuItem();
             this.miRemovePassword = new System.Windows.Forms.ToolStripMenuItem();
             this.miLock = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.miSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.miProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.rtbNoteText = new System.Windows.Forms.RichTextBox();
             this.textMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -155,7 +155,7 @@ namespace SyNotebook
             this.btRemovePassword.Name = "btRemovePassword";
             this.btRemovePassword.Size = new System.Drawing.Size(27, 25);
             this.btRemovePassword.TabIndex = 2;
-            toolTip.SetToolTip(this.btRemovePassword, "Снять пароль");
+            toolTip.SetToolTip(this.btRemovePassword, "Выключить шифрование раздела");
             this.btRemovePassword.UseVisualStyleBackColor = true;
             this.btRemovePassword.Click += new System.EventHandler(this.btRemovePassword_Click);
             // 
@@ -166,7 +166,7 @@ namespace SyNotebook
             this.btSetPassword.Name = "btSetPassword";
             this.btSetPassword.Size = new System.Drawing.Size(27, 25);
             this.btSetPassword.TabIndex = 2;
-            toolTip.SetToolTip(this.btSetPassword, "Установить пароль");
+            toolTip.SetToolTip(this.btSetPassword, "Включить шифрование раздела");
             this.btSetPassword.UseVisualStyleBackColor = true;
             this.btSetPassword.Click += new System.EventHandler(this.btSetPassword_Click);
             // 
@@ -277,21 +277,21 @@ namespace SyNotebook
             this.treeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miAddItem,
             this.miDeleteItem,
-            this.toolStripSeparator2,
+            this.miSeparator1,
             this.miSetPassword,
             this.miRemovePassword,
             this.miLock,
-            this.toolStripSeparator1,
+            this.miSeparator2,
             this.miProperties});
             this.treeMenu.Name = "treeMenu";
-            this.treeMenu.Size = new System.Drawing.Size(186, 148);
+            this.treeMenu.Size = new System.Drawing.Size(215, 170);
             this.treeMenu.Opening += new System.ComponentModel.CancelEventHandler(this.treeMenu_Opening);
             // 
             // miAddItem
             // 
             this.miAddItem.Image = global::SyNotebook.Properties.Resources.imgNewItem;
             this.miAddItem.Name = "miAddItem";
-            this.miAddItem.Size = new System.Drawing.Size(185, 22);
+            this.miAddItem.Size = new System.Drawing.Size(214, 22);
             this.miAddItem.Text = "Добавить элемент";
             this.miAddItem.Click += new System.EventHandler(this.miAddItem_Click);
             // 
@@ -299,47 +299,49 @@ namespace SyNotebook
             // 
             this.miDeleteItem.Image = global::SyNotebook.Properties.Resources.imgDeleteItem;
             this.miDeleteItem.Name = "miDeleteItem";
-            this.miDeleteItem.Size = new System.Drawing.Size(185, 22);
+            this.miDeleteItem.Size = new System.Drawing.Size(214, 22);
             this.miDeleteItem.Text = "Удалить элемент";
             this.miDeleteItem.Click += new System.EventHandler(this.miDeleteItem_Click);
             // 
-            // toolStripSeparator2
+            // miSeparator1
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(182, 6);
+            this.miSeparator1.Name = "miSeparator1";
+            this.miSeparator1.Size = new System.Drawing.Size(211, 6);
             // 
             // miSetPassword
             // 
             this.miSetPassword.Image = global::SyNotebook.Properties.Resources.imgSetPassword;
             this.miSetPassword.Name = "miSetPassword";
-            this.miSetPassword.Size = new System.Drawing.Size(185, 22);
-            this.miSetPassword.Text = "Установить пароль";
+            this.miSetPassword.Size = new System.Drawing.Size(214, 22);
+            this.miSetPassword.Text = "Включить шифрование";
             this.miSetPassword.Click += new System.EventHandler(this.miSetPassword_Click);
             // 
             // miRemovePassword
             // 
             this.miRemovePassword.Image = global::SyNotebook.Properties.Resources.imgRemovePassword;
             this.miRemovePassword.Name = "miRemovePassword";
-            this.miRemovePassword.Size = new System.Drawing.Size(185, 22);
-            this.miRemovePassword.Text = "Снять пароль";
+            this.miRemovePassword.Size = new System.Drawing.Size(214, 22);
+            this.miRemovePassword.Text = "Выключить шифрование";
             this.miRemovePassword.Click += new System.EventHandler(this.miRemovePassword_Click);
             // 
             // miLock
             // 
             this.miLock.Name = "miLock";
-            this.miLock.Size = new System.Drawing.Size(185, 22);
-            this.miLock.Text = "Заблокировать узел";
+            this.miLock.Size = new System.Drawing.Size(214, 22);
+            this.miLock.Text = "Зашифровать обратно";
+            this.miLock.ToolTipText = "После того, как вы ввели пароль к разделу, он временно расшифровывается. Нажмите " +
+    "сюда, чтобы снова зашифровать старым паролем.";
             this.miLock.Click += new System.EventHandler(this.miLock_Click);
             // 
-            // toolStripSeparator1
+            // miSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(182, 6);
+            this.miSeparator2.Name = "miSeparator2";
+            this.miSeparator2.Size = new System.Drawing.Size(211, 6);
             // 
             // miProperties
             // 
             this.miProperties.Name = "miProperties";
-            this.miProperties.Size = new System.Drawing.Size(185, 22);
+            this.miProperties.Size = new System.Drawing.Size(214, 22);
             this.miProperties.Text = "Свойства";
             this.miProperties.Click += new System.EventHandler(this.miProperties_Click);
             // 
@@ -354,7 +356,7 @@ namespace SyNotebook
             this.rtbNoteText.HideSelection = false;
             this.rtbNoteText.Location = new System.Drawing.Point(1, 41);
             this.rtbNoteText.Name = "rtbNoteText";
-            this.rtbNoteText.Size = new System.Drawing.Size(505, 314);
+            this.rtbNoteText.Size = new System.Drawing.Size(507, 314);
             this.rtbNoteText.TabIndex = 1;
             this.rtbNoteText.Text = "";
             this.rtbNoteText.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbNoteText_LinkClicked);
@@ -439,7 +441,7 @@ namespace SyNotebook
             this.btSetTextColor8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor8.BackColor = System.Drawing.Color.Gray;
             this.btSetTextColor8.ForeColor = System.Drawing.Color.Gray;
-            this.btSetTextColor8.Location = new System.Drawing.Point(418, 12);
+            this.btSetTextColor8.Location = new System.Drawing.Point(420, 12);
             this.btSetTextColor8.Name = "btSetTextColor8";
             this.btSetTextColor8.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor8.TabIndex = 9;
@@ -451,7 +453,7 @@ namespace SyNotebook
             this.btSetTextColor9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.btSetTextColor9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btSetTextColor9.Location = new System.Drawing.Point(364, 12);
+            this.btSetTextColor9.Location = new System.Drawing.Point(366, 12);
             this.btSetTextColor9.Name = "btSetTextColor9";
             this.btSetTextColor9.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor9.TabIndex = 4;
@@ -463,7 +465,7 @@ namespace SyNotebook
             this.btSetTextColor14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.btSetTextColor14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.btSetTextColor14.Location = new System.Drawing.Point(391, 12);
+            this.btSetTextColor14.Location = new System.Drawing.Point(393, 12);
             this.btSetTextColor14.Name = "btSetTextColor14";
             this.btSetTextColor14.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor14.TabIndex = 6;
@@ -474,7 +476,7 @@ namespace SyNotebook
             // 
             this.btSetTextColor0.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor0.BackColor = System.Drawing.Color.Black;
-            this.btSetTextColor0.Location = new System.Drawing.Point(337, 12);
+            this.btSetTextColor0.Location = new System.Drawing.Point(339, 12);
             this.btSetTextColor0.Name = "btSetTextColor0";
             this.btSetTextColor0.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor0.TabIndex = 3;
@@ -486,7 +488,7 @@ namespace SyNotebook
             this.btSetTextColor3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor3.BackColor = System.Drawing.Color.Olive;
             this.btSetTextColor3.ForeColor = System.Drawing.Color.Olive;
-            this.btSetTextColor3.Location = new System.Drawing.Point(445, 12);
+            this.btSetTextColor3.Location = new System.Drawing.Point(447, 12);
             this.btSetTextColor3.Name = "btSetTextColor3";
             this.btSetTextColor3.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor3.TabIndex = 3;
@@ -498,7 +500,7 @@ namespace SyNotebook
             this.btSetTextColor4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btSetTextColor4.BackColor = System.Drawing.Color.Green;
             this.btSetTextColor4.ForeColor = System.Drawing.Color.Green;
-            this.btSetTextColor4.Location = new System.Drawing.Point(472, 12);
+            this.btSetTextColor4.Location = new System.Drawing.Point(474, 12);
             this.btSetTextColor4.Name = "btSetTextColor4";
             this.btSetTextColor4.Size = new System.Drawing.Size(28, 23);
             this.btSetTextColor4.TabIndex = 3;
@@ -578,9 +580,9 @@ namespace SyNotebook
 		private System.Windows.Forms.Button btSetTextUnderline;
 		private System.Windows.Forms.Button btUndentDec;
 		private System.Windows.Forms.Button btIndentInc;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator miSeparator1;
         private System.Windows.Forms.ToolStripMenuItem miLock;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator miSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miProperties;
     }
 }

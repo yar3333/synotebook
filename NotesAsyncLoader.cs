@@ -5,8 +5,8 @@ namespace SyNotebook
 {
 	public sealed class NotesAsyncLoader
 	{
-		static List<Note> notesToLoad = new List<Note>();
-		static Thread thread;
+        private static List<Note> notesToLoad = new List<Note>();
+        private static Thread thread;
 
 		public static void Add(Note note)
 		{
@@ -18,15 +18,15 @@ namespace SyNotebook
 			thread = new Thread(Loading);
 			thread.Start();
 		}
-		
-		static bool needToStop = false;
+
+        private static bool needToStop = false;
 		public static void Abort()
 		{
 			needToStop = true;
 			while (thread!=null && thread.IsAlive) Thread.Sleep(20);
 		}
 
-		static void Loading()
+        private static void Loading()
 		{
 			while (!needToStop && notesToLoad.Count>0)
 			{

@@ -7,17 +7,17 @@ namespace SyNotebook.Crypting
 	/// </summary>
 	public class IdeaCFB
 	{
-		byte[] encIV;
-		byte[] decIV;
+        private byte[] encIV;
+        private byte[] decIV;
 
-		UInt16[] encKey = new UInt16[52];
+        private ushort[] encKey = new ushort[52];
 		
 		/// <summary>
 		/// Инициализирует поток для шифрования.
 		/// </summary>
 		/// <param name="IV">вектор инициализации (8 элементов)</param>
 		/// <param name="key">ключ (8 элементов)</param>
-		IdeaCFB(byte[] IV, UInt16[] key)
+        private IdeaCFB(byte[] IV, ushort[] key)
 		{
 			encIV = (byte[])IV.Clone();
 			decIV = (byte[])IV.Clone();
@@ -51,15 +51,15 @@ namespace SyNotebook.Crypting
         /// Шифрует байт данных.
         /// </summary>
         /// <param name="p">исходный байт данных</param>
-        byte Encrypt(byte p)
+        private byte Encrypt(byte p)
 		{
-			var iv16 = new UInt16[4];
-			iv16[0] = (UInt16)((encIV[1]<<8) | encIV[0]);
-			iv16[1] = (UInt16)((encIV[3]<<8) | encIV[2]);
-			iv16[2] = (UInt16)((encIV[5]<<8) | encIV[4]);
-			iv16[3] = (UInt16)((encIV[7]<<8) | encIV[6]);
+			var iv16 = new ushort[4];
+			iv16[0] = (ushort)((encIV[1]<<8) | encIV[0]);
+			iv16[1] = (ushort)((encIV[3]<<8) | encIV[2]);
+			iv16[2] = (ushort)((encIV[5]<<8) | encIV[4]);
+			iv16[3] = (ushort)((encIV[7]<<8) | encIV[6]);
 			
-			var tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
+			var tbuf = new ushort[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
 			var k = (byte)tbuf[0];
 			var r = (byte)(p ^ k);
 			
@@ -73,15 +73,15 @@ namespace SyNotebook.Crypting
 		/// Расшифровывает байт данных.
 		/// </summary>
 		/// <param name="c">зашифрованный байт данных</param>
-		byte Decrypt(byte c)
+        private byte Decrypt(byte c)
 		{
-			var iv16 = new UInt16[4];
-			iv16[0] = (UInt16)((decIV[1]<<8) | decIV[0]);
-			iv16[1] = (UInt16)((decIV[3]<<8) | decIV[2]);
-			iv16[2] = (UInt16)((decIV[5]<<8) | decIV[4]);
-			iv16[3] = (UInt16)((decIV[7]<<8) | decIV[6]);
+			var iv16 = new ushort[4];
+			iv16[0] = (ushort)((decIV[1]<<8) | decIV[0]);
+			iv16[1] = (ushort)((decIV[3]<<8) | decIV[2]);
+			iv16[2] = (ushort)((decIV[5]<<8) | decIV[4]);
+			iv16[3] = (ushort)((decIV[7]<<8) | decIV[6]);
 			
-			var tbuf = new UInt16[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
+			var tbuf = new ushort[4]; IdeaBase.encryptBlock(iv16,tbuf,encKey);
 			var k = (byte)tbuf[0];
 			var r = (byte)(c ^ k);
 			
@@ -90,13 +90,13 @@ namespace SyNotebook.Crypting
 			
 			return r;
 		}
-		
-		void Encrypt(byte[] buf)
+
+        private void Encrypt(byte[] buf)
 		{
 			for (var i=0;i<buf.Length;i++) buf[i] = Encrypt(buf[i]);
 		}
 
-		void Decrypt(byte[] buf)
+        private void Decrypt(byte[] buf)
 		{
 			for (var i=0;i<buf.Length;i++) buf[i] = Decrypt(buf[i]);
 		}
@@ -106,13 +106,13 @@ namespace SyNotebook.Crypting
         /// </summary>
         /// <param name="password">представление пароля hex числом</param>
         /// <returns></returns>
-        static UInt16[] ConvertPassword(string password)
+        private static ushort[] ConvertPassword(string password)
         {
             var pas = System.Text.Encoding.Default.GetBytes(password);
-            var buf = new UInt16[8];
+            var buf = new ushort[8];
             for (var i = 0; i < pas.Length; i+=2)
             {
-                buf[i % 8] = (UInt16)(((UInt16)pas[i % pas.Length]) | (((UInt16)pas[(i + 1) % pas.Length]) << 8));
+                buf[i % 8] = (ushort)(((ushort)pas[i % pas.Length]) | (((ushort)pas[(i + 1) % pas.Length]) << 8));
             }
             return buf;
         }
@@ -125,15 +125,15 @@ namespace SyNotebook.Crypting
     /// </summary>
     internal class IdeaBase
     {
-        const int IDEA_ROUNDS = 8;
-        const int IDEA_KEY_SIZE = IDEA_ROUNDS * 6 + 4;  // внутренний размер ключа в байтах
+        private const int IDEA_ROUNDS = 8;
+        private const int IDEA_KEY_SIZE = IDEA_ROUNDS * 6 + 4;  // внутренний размер ключа в байтах
 
         //		typedef UInt16 KeyIDEA[IDEA_KEY_SIZE];
 
         /// <summary>
         /// Умножает два числа по модулю 2^16 + 1 (причём нулевое значение аргумента соответствует тому, что он равен 2^16).
         /// </summary>
-        static UInt16 mul(UInt16 x, UInt16 y)
+        private static ushort mul(ushort x, ushort y)
         {
             unchecked
             {
@@ -141,19 +141,19 @@ namespace SyNotebook.Crypting
                 {
                     if (y != 0)
                     {
-                        var t = (UInt32)x * y;
-                        y = (UInt16)t;
-                        x = (UInt16)(t >> 16);
-                        return (UInt16)(y - x + (y < x ? 1u : 0u));
+                        var t = (uint)x * y;
+                        y = (ushort)t;
+                        x = (ushort)(t >> 16);
+                        return (ushort)(y - x + (y < x ? 1u : 0u));
                     }
                     else
                     {
-                        return (UInt16)(1 - x);
+                        return (ushort)(1 - x);
                     }
                 }
                 else
                 {
-                    return (UInt16)(1 - y);
+                    return (ushort)(1 - y);
                 }
             }
         }
@@ -161,30 +161,30 @@ namespace SyNotebook.Crypting
         /// <summary>
         /// Инвертирует число.
         /// </summary>
-        static UInt16 inv(UInt16 x)
+        private static ushort inv(ushort x)
         {
-            UInt16 t0, t1;
-            UInt16 q, y;
+            ushort t0, t1;
+            ushort q, y;
 
             if (x <= 1) return x;
-            t1 = (UInt16)(0x10001L / x);
-            y = (UInt16)(0x10001L % x);
+            t1 = (ushort)(0x10001L / x);
+            y = (ushort)(0x10001L % x);
 
-            if (y == 1) return (UInt16)(1 - t1);
+            if (y == 1) return (ushort)(1 - t1);
 
             t0 = 1;
             do
             {
-                q = (UInt16)(x / y);
-                x = (UInt16)(x % y);
-                t0 += (UInt16)(q * t1);
+                q = (ushort)(x / y);
+                x = (ushort)(x % y);
+                t0 += (ushort)(q * t1);
                 if (x == 1) return t0;
-                q = (UInt16)(y / x);
-                y = (UInt16)(y % x);
-                t1 += (UInt16)(q * t0);
+                q = (ushort)(y / x);
+                y = (ushort)(y % x);
+                t1 += (ushort)(q * t0);
             } while (y != 1);
 
-            return (UInt16)(1 - t1);
+            return (ushort)(1 - t1);
         }
 
         /// <summary>
@@ -192,15 +192,15 @@ namespace SyNotebook.Crypting
         /// </summary>
         /// <param name="dec_key">вычисляемый ключ для расшифрования (IDEA_KEY_SIZE элементов)</param>
         /// <param name="enc_key">исходный ключ для шифрования (IDEA_KEY_SIZE элементов)</param>
-        static void invertKey(UInt16[] dec_key, UInt16[] enc_key)
+        private static void invertKey(ushort[] dec_key, ushort[] enc_key)
         {
             unchecked
             {
                 var i = 0;
                 var j = 48;
                 dec_key[i++] = inv(enc_key[j++]);
-                dec_key[i++] = (UInt16)(-enc_key[j++]);
-                dec_key[i++] = (UInt16)(-enc_key[j++]);
+                dec_key[i++] = (ushort)(-enc_key[j++]);
+                dec_key[i++] = (ushort)(-enc_key[j++]);
                 dec_key[i++] = inv(enc_key[j++]);
                 j = 42;
                 while (i < IDEA_KEY_SIZE)
@@ -208,8 +208,8 @@ namespace SyNotebook.Crypting
                     dec_key[i++] = enc_key[j + 4];
                     dec_key[i++] = enc_key[j + 5];
                     dec_key[i++] = inv(enc_key[j]);
-                    dec_key[i++] = (UInt16)(-enc_key[j + 2]);
-                    dec_key[i++] = (UInt16)(-enc_key[j + 1]);
+                    dec_key[i++] = (ushort)(-enc_key[j + 2]);
+                    dec_key[i++] = (ushort)(-enc_key[j + 1]);
                     dec_key[i++] = inv(enc_key[j + 3]);
                     j -= 6;
                 }
@@ -224,7 +224,7 @@ namespace SyNotebook.Crypting
         /// </summary>
         /// <param name="key_out">создаваемый ключ (52 элемента)</param>
         /// <param name="key_phraze">исходный ключ (8 элементов)</param>
-        static public void makeEncryptKey(UInt16[] key_out, UInt16[] key_phraze)
+        static public void makeEncryptKey(ushort[] key_out, ushort[] key_phraze)
         {
             int i, j, k = 0;
 
@@ -232,7 +232,7 @@ namespace SyNotebook.Crypting
             for (i = 0; j < IDEA_KEY_SIZE; j++)
             {
                 i++;
-                key_out[i + 7 + k] = (UInt16)(key_out[i & 7 + k] << 9 | key_out[i + 1 & 7 + k] >> 7);
+                key_out[i + 7 + k] = (ushort)(key_out[i & 7 + k] << 9 | key_out[i + 1 & 7 + k] >> 7);
                 k += i & 8;
                 i &= 7;
             }
@@ -243,9 +243,9 @@ namespace SyNotebook.Crypting
         /// </summary>
         /// <param name="key_out">создаваемый ключ (52 элемента)</param>
         /// <param name="key_phraze">исходный ключ (8 элементов)</param>
-        static public void makeDecryptKey(UInt16[] key_out, UInt16[] key_phraze)
+        static public void makeDecryptKey(ushort[] key_out, ushort[] key_phraze)
         {
-            var temp_key = new UInt16[IDEA_KEY_SIZE];
+            var temp_key = new ushort[IDEA_KEY_SIZE];
             makeEncryptKey(temp_key, key_phraze);
             invertKey(key_out, temp_key);
         }
@@ -256,9 +256,9 @@ namespace SyNotebook.Crypting
         /// <param name="BufIn">шифруемый блок данных (4 слова = 8 байт)</param>
         /// <param name="BufOut">зашифрованный блок данных (4 слова = 8 байт)</param>
         /// <param name="key">внутренний ключ шифрования</param>
-        static public void encryptBlock(UInt16[] BufIn, UInt16[] BufOut, UInt16[] key)
+        static public void encryptBlock(ushort[] BufIn, ushort[] BufOut, ushort[] key)
         {
-            UInt16 A, B, C, D, E, F;
+            ushort A, B, C, D, E, F;
 
             var i = 0;
 
@@ -275,37 +275,37 @@ namespace SyNotebook.Crypting
                     B += key[i++];
                     C += key[i++];
                     D = mul(D, key[i++]);
-                    F = (UInt16)(A ^ C);
+                    F = (ushort)(A ^ C);
                     F = mul(F, key[i++]);
-                    E = (UInt16)(F + (B ^ D));
+                    E = (ushort)(F + (B ^ D));
                     E = mul(E, key[i++]);
-                    F = (UInt16)(E + F);
+                    F = (ushort)(E + F);
                     A ^= E;
                     D ^= F;
                     F ^= B;
-                    B = (UInt16)(C ^ E);
+                    B = (ushort)(C ^ E);
                     C = F;
                 }
 
                 BufOut[0] = mul(A, key[i++]);
-                BufOut[1] = (UInt16)(C + key[i++]);
-                BufOut[2] = (UInt16)(B + key[i++]);
+                BufOut[1] = (ushort)(C + key[i++]);
+                BufOut[2] = (ushort)(B + key[i++]);
                 BufOut[3] = mul(D, key[i]);
             }
         }
 
-        static public UInt64 encryptBlock(UInt64 p, UInt16[] key)
+        static public ulong encryptBlock(ulong p, ushort[] key)
         {
-            var buf = new UInt16[4];
-            buf[0] = (UInt16)(p & 0xFFFF);
-            buf[1] = (UInt16)((p >> 16) & 0xFFFF);
-            buf[2] = (UInt16)((p >> 32) & 0xFFFF);
-            buf[3] = (UInt16)((p >> 48) & 0xFFFF);
+            var buf = new ushort[4];
+            buf[0] = (ushort)(p & 0xFFFF);
+            buf[1] = (ushort)((p >> 16) & 0xFFFF);
+            buf[2] = (ushort)((p >> 32) & 0xFFFF);
+            buf[3] = (ushort)((p >> 48) & 0xFFFF);
 
-            var r = new UInt16[4];
+            var r = new ushort[4];
             encryptBlock(buf, r, key);
 
-            return ((UInt64)r[3] << 48) | ((UInt64)r[2] << 32) | ((UInt64)r[1] << 16) | ((UInt64)r[0]);
+            return ((ulong)r[3] << 48) | ((ulong)r[2] << 32) | ((ulong)r[1] << 16) | ((ulong)r[0]);
         }
     }
 }

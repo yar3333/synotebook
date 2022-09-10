@@ -10,8 +10,8 @@ namespace SyNotebook
 {
     public partial class MainForm : Form
     {
-        static readonly string pathToDataFolder = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Notes";
-        static readonly string pathToIniFile = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\SyNotebook.ini";
+        private static readonly string pathToDataFolder = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Notes";
+        private static readonly string pathToIniFile = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\SyNotebook.ini";
 
         private readonly Notebook notebook;
 
@@ -73,17 +73,17 @@ namespace SyNotebook
             rtbNoteText.Font = proportionalFont;
         }
 
-        void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             LoadGlobalParam();
         }
 
-        void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveGlobalParam();
         }
 
-        void AutoFillNotePositions(TreeNode root)
+        private void AutoFillNotePositions(TreeNode root)
         {
 			var note = (Note)root.Tag;
 			if (note!=null) note.Position = root.Index;
@@ -97,7 +97,7 @@ namespace SyNotebook
             notebook.Save(pathToDataFolder);
         }
 
-        void trayIcon_Click(object sender, EventArgs e)
+        private void trayIcon_Click(object sender, EventArgs e)
         {
             ShowInTaskbar = true;
             trayIcon.Visible = false;
@@ -152,7 +152,7 @@ namespace SyNotebook
                 e.Effect = DragDropEffects.None;
         }
 
-        bool isNodeHasChild(TreeNode baseNode, TreeNode childNode)
+        private bool isNodeHasChild(TreeNode baseNode, TreeNode childNode)
         {
             foreach (TreeNode node in baseNode.Nodes)
             {
@@ -162,14 +162,14 @@ namespace SyNotebook
             return false;
         }
 
-        TreeNode getTopCryptedParentNode(TreeNode node)
+        private TreeNode getTopCryptedParentNode(TreeNode node)
         {
             while (true)
             {
                 if (node.Parent == null) return null;
                 var note = (Note)node.Parent.Tag;
                 if (note == null) return node;
-                if (!note.IsCrypted || note.ID == Guid.Empty) return node;
+                if (!note.IsCrypted || note.Id == Guid.Empty) return node;
                 node = node.Parent;
             }
         }
@@ -313,7 +313,7 @@ namespace SyNotebook
             }
         }
 
-        bool unlockSubTree(TreeNode root, string preText)
+        private bool unlockSubTree(TreeNode root, string preText)
         {
             var password = "";
             for (; ; )
@@ -343,7 +343,7 @@ namespace SyNotebook
             }
         }
 
-        Font getSelectionFont()
+        private Font getSelectionFont()
         {
             var r = rtbNoteText.SelectionFont;
             if (r == null)
@@ -357,8 +357,9 @@ namespace SyNotebook
             return r;
         }
 
-        delegate void TextBlockFindedHandler();
-        void enumFontBlocks(bool ignoreFontSize, TextBlockFindedHandler fontBlockFinded)
+        private delegate void TextBlockFindedHandler();
+
+        private void enumFontBlocks(bool ignoreFontSize, TextBlockFindedHandler fontBlockFinded)
         {
             var saveSelStart = rtbNoteText.SelectionStart;
             var saveSelLen = rtbNoteText.SelectionLength;
@@ -412,7 +413,7 @@ namespace SyNotebook
             rtbNoteText.SelectionColor = ((Button)sender).BackColor;
         }
 
-        void setFontProportional()
+        private void setFontProportional()
         {
             var font = new Font(proportionalFont, rtbNoteText.SelectionFont.Style);
             rtbNoteText.SelectionFont = font;
@@ -422,7 +423,7 @@ namespace SyNotebook
             enumFontBlocks(true, setFontProportional);
         }
 
-        void setFontMonospace()
+        private void setFontMonospace()
         {
             var font = new Font(monospaceFont, rtbNoteText.SelectionFont.Style);
             rtbNoteText.SelectionFont = font;
@@ -432,7 +433,7 @@ namespace SyNotebook
             enumFontBlocks(true, setFontMonospace);
         }
 
-        void setFontSizeInc()
+        private void setFontSizeInc()
         {
             rtbNoteText.SelectionFont = new Font(
                 rtbNoteText.SelectionFont.FontFamily,
@@ -445,7 +446,7 @@ namespace SyNotebook
             enumFontBlocks(false, setFontSizeInc);
         }
 
-        void setFontSizeDec()
+        private void setFontSizeDec()
         {
             rtbNoteText.SelectionFont = new Font(
                 rtbNoteText.SelectionFont.FontFamily,
@@ -487,7 +488,7 @@ namespace SyNotebook
             }
         }
 
-		public void SaveGlobalParam()
+		private void SaveGlobalParam()
 		{
             var w = new System.Xml.XmlTextWriter(pathToIniFile, Encoding.Default);
 			w.Formatting = System.Xml.Formatting.Indented;
@@ -517,8 +518,8 @@ namespace SyNotebook
 			w.WriteEndDocument();
 			w.Close();
 		}
-		
-        void LoadGlobalParam()
+
+        private void LoadGlobalParam()
 		{
             if (!System.IO.File.Exists(pathToIniFile)) return;
 
@@ -576,7 +577,7 @@ namespace SyNotebook
             btRemovePassword_Click(sender, e);
         }
 
-        bool isNodeHasCryptedParents(TreeNode node)
+        private bool isNodeHasCryptedParents(TreeNode node)
         {
             while (true)
             {
@@ -671,7 +672,26 @@ namespace SyNotebook
             if (tree.SelectedNode == null)
             {
                 e.Cancel = true;
+                return;
             }
+
+            var isRoot = tree.SelectedNode == tree.Nodes[0];
+            
+            miSetPassword.Visible = !isRoot;
+            miRemovePassword.Visible = !isRoot;
+            miLock.Visible = !isRoot;
+            miProperties.Visible = !isRoot;
+            miSeparator1.Visible = !isRoot;
+            miSeparator2.Visible = !isRoot;
+
+            if (isRoot) return;
+            
+            var note = (Note)tree.SelectedNode.Tag;
+
+            miAddItem.Enabled = !note.IsCrypted || !note.IsLocked;
+            miSetPassword.Enabled = !note.IsCrypted || !note.IsLocked;
+            miRemovePassword.Enabled = note.IsCrypted && !note.IsLocked;
+            miLock.Enabled = note.IsCrypted && !note.IsLocked;
         }
 
         private void tree_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -680,7 +700,7 @@ namespace SyNotebook
 
             var note = (Note)tree.SelectedNode.Tag;
             
-            if (note.ID == Guid.Empty)
+            if (note.Id == Guid.Empty)
             {
             	tree.SelectedNode.Expand();
             	return;
@@ -808,7 +828,7 @@ namespace SyNotebook
             tree_MouseDoubleClick(null, null);
         }
 
-        MouseEventArgs rtbMouseOnConectMenu;
+        private MouseEventArgs rtbMouseOnConectMenu;
 
         private void rtbNoteText_MouseUp(object sender, MouseEventArgs e)
         {

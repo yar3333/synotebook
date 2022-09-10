@@ -9,8 +9,8 @@ namespace SyNotebook
 		{
 			InitializeComponent();
 		}
-		
-		void updateSamples()
+
+        private void updateSamples()
 		{
 			propFontSample.SelectAll();
 			propFontSample.SelectionFont = propFontDialog.Font;
