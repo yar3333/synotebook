@@ -381,11 +381,22 @@ public class Note
         isWasChanged = false;
     }
 
-    private static uint GetTextCrc(string s)
+    private static uint CalcCrc32(string s)
     {
         uint r = 0;
-        foreach (var b in Encoding.ASCII.GetBytes(s)) unchecked { r += b; }
+        foreach (var b in Encoding.UTF8.GetBytes(s)) unchecked { r += b; }
         return r;
+    }    
+    
+    private static bool IsCrc32Correct(string s, uint mustBe)
+    {
+        uint r = 0;
+        foreach (var b in Encoding.UTF8.GetBytes(s)) unchecked { r += b; }
+        if (r == mustBe) return true;
+
+        r = 0;
+        foreach (var b in Encoding.GetEncoding(1251).GetBytes(s)) unchecked { r += b; }
+        return r == mustBe;
     }
 
     /// <summary>
@@ -407,12 +418,12 @@ public class Note
             }
             catch {}
 
-            if (potenName == null || potenText == null || GetTextCrc(potenName + potenText) != textCrc32) 
+            if (potenName == null || potenText == null || !IsCrc32Correct(potenName + potenText, textCrc32))
             {
                 var idea = new Crypting.IdeaCFB(password);
                 potenName = !isTopLevelCryptedItem ? idea.Decrypt(name) : "";
                 potenText = idea.Decrypt(text);
-                if (GetTextCrc(potenName + potenText) != textCrc32) throw new BadPassword(); 
+                if (!IsCrc32Correct(potenName + potenText, textCrc32)) throw new BadPassword(); 
             }
 
             Password = password;
@@ -443,7 +454,7 @@ public class Note
     {
         if (!isCrypted)
         {
-            textCrc32 = GetTextCrc((!isTopLevelCryptedItem ? name : "") + text);
+            textCrc32 = CalcCrc32((!isTopLevelCryptedItem ? name : "") + text);
                 
             if (!isTopLevelCryptedItem) name = Crypting.Aes.Encrypt(name, password);
             text = Crypting.Aes.Encrypt(text, password);
